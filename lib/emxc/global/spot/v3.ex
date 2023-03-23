@@ -6,13 +6,16 @@ defmodule Emxc.Global.Spot.V3 do
   @base_url @env["api_url"]
 
   @type response :: {:ok, map()} | {:error, any()} | no_return()
+  @type client :: Tesla.Client.t()
+  @type headers :: Tesla.Env.headers()
 
   @doc """
   Create a client for the public endpoints.
   """
-  @type public_option :: {:headers, Tesla.Env.headers()}
-  @spec public([public_option()]) :: Tesla.Client.t()
-  def public(opts \\ []) do
+  @type public_option :: {:headers, headers()}
+  @spec public_client([public_option()]) :: client()
+  @doc section: :api
+  def public_client(opts \\ []) do
     custom_headers = Keyword.get(opts, :headers, [])
 
     middleware = [
@@ -27,9 +30,10 @@ defmodule Emxc.Global.Spot.V3 do
   @doc """
   Create a client for the private endpoints.
   """
-  @type authorized_option :: {:headers, Tesla.Env.headers()} | {:api_key, String.t()}
-  @spec authorized(Tesla.Env.headers()) :: Tesla.Client.t()
-  def authorized(opts \\ []) do
+  @type authorized_option :: {:headers, headers()} | {:api_key, String.t()}
+  @spec authorized_client(Tesla.Env.headers()) :: client()
+  @doc section: :api
+  def authorized_client(opts \\ []) do
     custom_headers = Keyword.get(opts, :headers, [])
     api_key = Keyword.get(opts, :api_key, "api_key")
 
@@ -48,13 +52,15 @@ defmodule Emxc.Global.Spot.V3 do
   @doc """
   Test connectivity to the Rest API.
   """
-  @spec ping(Tesla.Client.t()) :: response()
+  @spec ping(client()) :: response()
+  @doc section: :market_data
   def ping(client), do: client |> Tesla.get("/api/v3/ping") |> unwrap_response()
 
   @doc """
   Check server time.
   """
-  @spec time(Tesla.Client.t()) :: response()
+  @spec time(client()) :: response()
+  @doc section: :market_data
   def time(client), do: client |> Tesla.get("/api/v3/time") |> unwrap_response()
 
   @doc """
@@ -66,7 +72,8 @@ defmodule Emxc.Global.Spot.V3 do
     * `:symbols` - A list of symbols to get the exchange information for.
   """
   @type exchange_info_option :: {:symbol, String.t()} | {:symbols, list(String.t())}
-  @spec exchange_info(Tesla.Client.t(), [exchange_info_option()]) :: response()
+  @spec exchange_info(client(), [exchange_info_option()]) :: response()
+  @doc section: :market_data
   def exchange_info(client, opts \\ []),
     do: client |> Tesla.get("/api/v3/exchangeInfo", query: opts) |> unwrap_response()
 
@@ -79,7 +86,8 @@ defmodule Emxc.Global.Spot.V3 do
     * `:symbol` - The symbol to get the order book for.
   """
   @type order_book_option :: {:limit, integer()} | {:symbol, String.t()}
-  @spec order_book(Tesla.Client.t(), [order_book_option()]) :: response()
+  @spec order_book(client(), [order_book_option()]) :: response()
+  @doc section: :market_data
   def order_book(client, opts \\ []),
     do: client |> Tesla.get("/api/v3/depth", query: opts) |> unwrap_response()
 
@@ -92,7 +100,8 @@ defmodule Emxc.Global.Spot.V3 do
     * `:symbol` - The symbol to get trades for.
   """
   @type recent_trades_option :: {:limit, integer()} | {:symbol, String.t()}
-  @spec recent_trades(Tesla.Client.t(), [recent_trades_option()]) :: response()
+  @spec recent_trades(client(), [recent_trades_option()]) :: response()
+  @doc section: :market_data
   def recent_trades(client, opts \\ []),
     do: client |> Tesla.get("/api/v3/trades", query: opts) |> unwrap_response()
 
@@ -111,7 +120,8 @@ defmodule Emxc.Global.Spot.V3 do
           | {:symbol, String.t()}
           | {:startTime, integer()}
           | {:endTime, integer()}
-  @spec compressed_trades(Tesla.Client.t(), [compressed_trades_option()]) :: response()
+  @spec compressed_trades(client(), [compressed_trades_option()]) :: response()
+  @doc section: :market_data
   def compressed_trades(client, opts \\ []),
     do: client |> Tesla.get("/api/v3/aggTrades", query: opts) |> unwrap_response()
 
@@ -132,7 +142,8 @@ defmodule Emxc.Global.Spot.V3 do
           | {:interval, String.t()}
           | {:startTime, integer()}
           | {:endTime, integer()}
-  @spec kline(Tesla.Client.t(), [kline_option()]) :: response()
+  @spec kline(client(), [kline_option()]) :: response()
+  @doc section: :market_data
   def kline(client, opts \\ []),
     do: client |> Tesla.get("/api/v3/klines", query: opts) |> unwrap_response()
 end

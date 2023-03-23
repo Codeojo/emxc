@@ -4,11 +4,12 @@ defmodule Emxc.MixProject do
   def project do
     [
       app: :emxc,
-      version: "0.0.1",
+      version: "0.0.2",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      package: package()
+      package: package(),
+      docs: docs()
     ]
   end
 
@@ -39,6 +40,17 @@ defmodule Emxc.MixProject do
       },
       files: ~w(lib mix.exs README.md LICENSE),
       description: "a Tesla REST client for the MEXC Exchange"
+    ]
+  end
+
+  defp docs do
+    [
+      main: "Emxc.Global.Spot.V3",
+      groups_for_docs: [
+        API: &(&1[:section] == :api),
+        Utilities: &(&1[:section] == :utilities),
+        "Market Data": &(&1[:section] == :market_data)
+      ]
     ]
   end
 end
