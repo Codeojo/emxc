@@ -333,4 +333,27 @@ defmodule Emxc.Global.Spot.V3 do
   @doc section: :market_data
   def ticker_book(client, opts \\ []),
     do: client |> Tesla.get("/api/v3/ticker/bookTicker", query: opts) |> unwrap_response()
+
+  # ETF
+
+  @doc """
+  Get ETF info.
+
+  ## Options
+
+    * `:symbol` - The symbol to get the ticker for.
+    * If no symbol is provided, all symbols will be returned in a list.
+
+  ## Example
+
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.public_client() |> Spot.etf_info(symbol: "BTCUSDT")
+      iex> response.result["symbol"] == "BTCUSDT" && response.result["price"] > 0
+      true
+  """
+  @type etf_info_option :: {:symbol, String.t()}
+  @spec etf_info(client(), [etf_info_option()]) :: response()
+  @doc section: :etf
+  def etf_info(client, opts \\ []),
+    do: client |> Tesla.get("/api/v3/etf/info", query: opts) |> unwrap_response()
 end
