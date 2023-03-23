@@ -1,0 +1,1511 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# MEXC Global Spot v3 API
+
+```elixir
+alias Emxc.Global.Spot.V3, as: Spot
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Emxc.Global.Spot.V3
+```
+
+## Market Data Endpoints
+
+```elixir
+Spot.public() |> Spot.ping()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok, %{result: %{}, status: 200}}
+```
+
+```elixir
+Spot.public() |> Spot.time()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok, %{result: %{"serverTime" => 1679553856646}, status: 200}}
+```
+
+```elixir
+Spot.public() |> Spot.exchange_info()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok,
+ %{
+   result: %{
+     "exchangeFilters" => [],
+     "rateLimits" => [],
+     "serverTime" => 1679553856793,
+     "symbols" => [
+       %{
+         "baseAsset" => "TOMO3L",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => false,
+         "makerCommission" => "0.002",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "1.000000000000000000",
+         "quoteAmountPrecisionMarket" => "1.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 6,
+         "quoteCommissionPrecision" => 6,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 6,
+         "status" => "ENABLED",
+         "symbol" => "TOMO3LUSDT",
+         "takerCommission" => "0.002"
+       },
+       %{
+         "baseAsset" => "ALEPH",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "5",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 5,
+         "quoteCommissionPrecision" => 5,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 5,
+         "status" => "ENABLED",
+         "symbol" => "ALEPHUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "OGN",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.01",
+         "filters" => [],
+         "isMarginTradingAllowed" => true,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 4,
+         "quoteCommissionPrecision" => 4,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 4,
+         "status" => "ENABLED",
+         "symbol" => "OGNUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "DCERC",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 7,
+         "quoteCommissionPrecision" => 7,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 7,
+         "status" => "ENABLED",
+         "symbol" => "DCERCUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "HC",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 5,
+         "quoteCommissionPrecision" => 5,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 5,
+         "status" => "ENABLED",
+         "symbol" => "HCUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "HAM",
+         "baseAssetPrecision" => 0,
+         "baseCommissionPrecision" => 0,
+         "baseSizePrecision" => "1000000",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 12,
+         "quoteCommissionPrecision" => 12,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 12,
+         "status" => "ENABLED",
+         "symbol" => "HAMUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "QNT",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.01",
+         "filters" => [],
+         "isMarginTradingAllowed" => true,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 3,
+         "quoteCommissionPrecision" => 3,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 3,
+         "status" => "ENABLED",
+         "symbol" => "QNTUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "ALLIN",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "MARKET", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 3,
+         "quoteCommissionPrecision" => 3,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 3,
+         "status" => "ENABLED",
+         "symbol" => "ALLINUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "HARD",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => true,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 4,
+         "quoteCommissionPrecision" => 4,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 4,
+         "status" => "ENABLED",
+         "symbol" => "HARDUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "GHNY",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.01",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 2,
+         "quoteCommissionPrecision" => 2,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 2,
+         "status" => "ENABLED",
+         "symbol" => "GHNYUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "HAM",
+         "baseAssetPrecision" => 0,
+         "baseCommissionPrecision" => 0,
+         "baseSizePrecision" => "100000",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "MARKET", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDC",
+         "quoteAssetPrecision" => 12,
+         "quoteCommissionPrecision" => 12,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 12,
+         "status" => "ENABLED",
+         "symbol" => "HAMUSDC",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "BTC",
+         "baseAssetPrecision" => 6,
+         "baseCommissionPrecision" => 6,
+         "baseSizePrecision" => "0.000001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "10000000.000000000000000000",
+         "maxQuoteAmountMarket" => "5000000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "10.000000000000000000",
+         "quoteAmountPrecisionMarket" => "10.000000000000000000",
+         "quoteAsset" => "TRYB",
+         "quoteAssetPrecision" => 2,
+         "quoteCommissionPrecision" => 2,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 2,
+         "status" => "ENABLED",
+         "symbol" => "BTCTRYB",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "PRX",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.1",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => false,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "MARKET", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 4,
+         "quoteCommissionPrecision" => 4,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 4,
+         "status" => "ENABLED",
+         "symbol" => "PRXUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "TFI",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 5,
+         "quoteCommissionPrecision" => 5,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 5,
+         "status" => "ENABLED",
+         "symbol" => "TFIUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "AMG",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "MARKET", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 5,
+         "quoteCommissionPrecision" => 5,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 5,
+         "status" => "ENABLED",
+         "symbol" => "AMGUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "SBR",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 7,
+         "quoteCommissionPrecision" => 7,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 7,
+         "status" => "ENABLED",
+         "symbol" => "SBRUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "HAWK",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 6,
+         "quoteCommissionPrecision" => 6,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 6,
+         "status" => "ENABLED",
+         "symbol" => "HAWKUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "ALICE3L",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => false,
+         "makerCommission" => "0.002",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "1.000000000000000000",
+         "quoteAmountPrecisionMarket" => "1.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 6,
+         "quoteCommissionPrecision" => 6,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 6,
+         "status" => "ENABLED",
+         "symbol" => "ALICE3LUSDT",
+         "takerCommission" => "0.002"
+       },
+       %{
+         "baseAsset" => "KROM",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.01",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 5,
+         "quoteCommissionPrecision" => 5,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 5,
+         "status" => "ENABLED",
+         "symbol" => "KROMUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "ANT",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.01",
+         "filters" => [],
+         "isMarginTradingAllowed" => true,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 4,
+         "quoteCommissionPrecision" => 4,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 4,
+         "status" => "ENABLED",
+         "symbol" => "ANTUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "XFT",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "MARKET", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 3,
+         "quoteCommissionPrecision" => 3,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 3,
+         "status" => "ENABLED",
+         "symbol" => "XFTUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "HERO",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 6,
+         "quoteCommissionPrecision" => 6,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 6,
+         "status" => "ENABLED",
+         "symbol" => "HEROUSDT",
+         ...
+       },
+       %{
+         "baseAsset" => "HFT",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.01",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => false,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 4,
+         "quoteCommissionPrecision" => 4,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 4,
+         "status" => "ENABLED",
+         ...
+       },
+       %{
+         "baseAsset" => "SOLX",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.01",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 7,
+         "quoteCommissionPrecision" => 7,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 7,
+         ...
+       },
+       %{
+         "baseAsset" => "MTV",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 7,
+         "quoteCommissionPrecision" => 7,
+         "quoteOrderQtyMarketAllowed" => false,
+         ...
+       },
+       %{
+         "baseAsset" => "SMTY",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 6,
+         "quoteCommissionPrecision" => 6,
+         ...
+       },
+       %{
+         "baseAsset" => "IOTX3S",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => false,
+         "makerCommission" => "0.002",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "1.000000000000000000",
+         "quoteAmountPrecisionMarket" => "1.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 6,
+         ...
+       },
+       %{
+         "baseAsset" => "AE",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "1000.000000000000000000",
+         "maxQuoteAmountMarket" => "1000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "0.001000000000000000",
+         "quoteAmountPrecisionMarket" => "0.001000000000000000",
+         "quoteAsset" => "ETH",
+         ...
+       },
+       %{
+         "baseAsset" => "MAN",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "MARKET", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         ...
+       },
+       %{
+         "baseAsset" => "MC",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "MARKET", ...],
+         "permissions" => ["SPOT", ...],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         ...
+       },
+       %{
+         "baseAsset" => "REN3S",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => false,
+         "makerCommission" => "0.002",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", ...],
+         "permissions" => [...],
+         ...
+       },
+       %{
+         "baseAsset" => "VET",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "10",
+         "filters" => [],
+         "isMarginTradingAllowed" => true,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => [...],
+         ...
+       },
+       %{
+         "baseAsset" => "CNG",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         ...
+       },
+       %{
+         "baseAsset" => "SPS",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         ...
+       },
+       %{
+         "baseAsset" => "WSIENNA",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.1",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         ...
+       },
+       %{
+         "baseAsset" => "OPUL",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.01",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => true,
+         ...
+       },
+       %{
+         "baseAsset" => "ICP3L",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         ...
+       },
+       %{
+         "baseAsset" => "AGLD3L",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.0001",
+         "filters" => [],
+         ...
+       },
+       %{
+         "baseAsset" => "BSV3L",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "0.001",
+         ...
+       },
+       %{"baseAsset" => "DFI", "baseAssetPrecision" => 2, "baseCommissionPrecision" => 2, ...},
+       %{"baseAsset" => "FET", "baseAssetPrecision" => 2, ...},
+       %{"baseAsset" => "DGH", ...},
+       %{...},
+       ...
+     ],
+     "timezone" => "CST"
+   },
+   status: 200
+ }}
+```
+
+```elixir
+Spot.public() |> Spot.exchange_info(symbol: "BTCUSDT")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok,
+ %{
+   result: %{
+     "exchangeFilters" => [],
+     "rateLimits" => [],
+     "serverTime" => 1679553857055,
+     "symbols" => [
+       %{
+         "baseAsset" => "BTC",
+         "baseAssetPrecision" => 6,
+         "baseCommissionPrecision" => 6,
+         "baseSizePrecision" => "0.000001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => false,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "MARKET", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 2,
+         "quoteCommissionPrecision" => 2,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 2,
+         "status" => "ENABLED",
+         "symbol" => "BTCUSDT",
+         "takerCommission" => "0.001"
+       }
+     ],
+     "timezone" => "CST"
+   },
+   status: 200
+ }}
+```
+
+```elixir
+Spot.public() |> Spot.exchange_info(symbols: "BTCUSDT,SNTUSDT")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok,
+ %{
+   result: %{
+     "exchangeFilters" => [],
+     "rateLimits" => [],
+     "serverTime" => 1679553857203,
+     "symbols" => [
+       %{
+         "baseAsset" => "BTC",
+         "baseAssetPrecision" => 6,
+         "baseCommissionPrecision" => 6,
+         "baseSizePrecision" => "0.000001",
+         "filters" => [],
+         "isMarginTradingAllowed" => false,
+         "isSpotTradingAllowed" => false,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "MARKET", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 2,
+         "quoteCommissionPrecision" => 2,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 2,
+         "status" => "ENABLED",
+         "symbol" => "BTCUSDT",
+         "takerCommission" => "0.001"
+       },
+       %{
+         "baseAsset" => "SNT",
+         "baseAssetPrecision" => 2,
+         "baseCommissionPrecision" => 2,
+         "baseSizePrecision" => "1",
+         "filters" => [],
+         "isMarginTradingAllowed" => true,
+         "isSpotTradingAllowed" => true,
+         "makerCommission" => "0",
+         "maxQuoteAmount" => "5000000.000000000000000000",
+         "maxQuoteAmountMarket" => "500000.000000000000000000",
+         "orderTypes" => ["LIMIT", "LIMIT_MAKER"],
+         "permissions" => ["SPOT", "MARGIN"],
+         "quoteAmountPrecision" => "5.000000000000000000",
+         "quoteAmountPrecisionMarket" => "5.000000000000000000",
+         "quoteAsset" => "USDT",
+         "quoteAssetPrecision" => 7,
+         "quoteCommissionPrecision" => 7,
+         "quoteOrderQtyMarketAllowed" => false,
+         "quotePrecision" => 7,
+         "status" => "ENABLED",
+         "symbol" => "SNTUSDT",
+         "takerCommission" => "0.001"
+       }
+     ],
+     "timezone" => "CST"
+   },
+   status: 200
+ }}
+```
+
+```elixir
+Spot.public() |> Spot.order_book(symbol: "BTCUSDT")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok,
+ %{
+   result: %{
+     "asks" => [
+       ["27660.32", "2.662878"],
+       ["27660.33", "2.209511"],
+       ["27660.35", "3.981312"],
+       ["27660.37", "3.018747"],
+       ["27660.39", "2.065618"],
+       ["27660.42", "1.117472"],
+       ["27660.45", "2.573154"],
+       ["27660.47", "3.682013"],
+       ["27660.49", "1.808914"],
+       ["27660.52", "2.022501"],
+       ["27660.66", "1.126400"],
+       ["27660.76", "1.156078"],
+       ["27661.00", "1.182084"],
+       ["27661.01", "1.134997"],
+       ["27661.03", "1.137399"],
+       ["27661.04", "1.088005"],
+       ["27661.14", "1.257114"],
+       ["27661.38", "1.099455"],
+       ["27661.55", "1.095767"],
+       ["27661.64", "1.249931"],
+       ["27661.66", "1.205050"],
+       ["27661.69", "1.187403"],
+       ["27661.70", "1.241983"],
+       ["27661.71", "1.153028"],
+       ["27661.83", "1.166152"],
+       ["27662.05", "1.248540"],
+       ["27662.10", "1.192806"],
+       ["27662.24", "1.107954"],
+       ["27662.35", "1.222654"],
+       ["27662.65", "1.226446"],
+       ["27662.69", "1.161073"],
+       ["27662.95", "1.123155"],
+       ["27663.20", "1.170156"],
+       ["27663.74", "1.187622"],
+       ["27663.75", "1.270720"],
+       ["27663.76", "1.169022"],
+       ["27663.85", "1.157502"],
+       ["27664.10", "1.261288"],
+       ["27672.63", "10.000000"],
+       ["27675.00", "0.036232"],
+       ["27690.84", "0.002620"],
+       ["27740.33", "0.000514"],
+       ["27760.00", "0.007204"],
+       ["27800.00", "0.000777"],
+       ["27801.37", ...],
+       [...],
+       ...
+     ],
+     "bids" => [
+       ["27660.02", "2.263467"],
+       ["27660.01", "2.328237"],
+       ["27660.00", "2.996721"],
+       ["27659.96", "2.931393"],
+       ["27659.95", "2.202515"],
+       ["27659.94", "2.459873"],
+       ["27659.91", "1.218563"],
+       ["27659.88", "8.104272"],
+       ["27659.87", "1.185800"],
+       ["27659.86", "1.278820"],
+       ["27659.81", "2.252773"],
+       ["27659.78", "2.194683"],
+       ["27659.36", "1.300074"],
+       ["27659.35", "1.203592"],
+       ["27659.34", "1.197620"],
+       ["27658.99", "1.203127"],
+       ["27658.83", "1.254530"],
+       ["27658.79", "1.101900"],
+       ["27658.78", "1.137333"],
+       ["27658.62", "1.681830"],
+       ["27658.50", "1.153197"],
+       ["27658.38", "1.298363"],
+       ["27658.25", "1.160917"],
+       ["27658.24", "1.200000"],
+       ["27657.96", "1.100229"],
+       ["27657.88", "1.280109"],
+       ["27657.77", "1.153434"],
+       ["27657.69", "1.202265"],
+       ["27657.64", "1.254830"],
+       ["27657.51", "1.184020"],
+       ["27657.40", "1.109627"],
+       ["27657.32", "1.115650"],
+       ["27657.31", "1.119159"],
+       ["27657.30", "1.103000"],
+       ["27657.14", "1.242485"],
+       ["27656.89", "1.188245"],
+       ["27656.88", "1.241575"],
+       ["27656.63", "1.239732"],
+       ["27656.62", "1.276740"],
+       ["27602.00", "0.010000"],
+       ["27535.06", "0.000220"],
+       ["27440.00", "0.054597"],
+       ["27413.00", "0.003807"],
+       ["27391.12", ...],
+       [...],
+       ...
+     ],
+     "lastUpdateId" => 14042607958
+   },
+   status: 200
+ }}
+```
+
+```elixir
+Spot.public() |> Spot.recent_trades(symbol: "BTCUSDT")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok,
+ %{
+   result: [
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27655.98",
+       "qty" => "1",
+       "quoteQty" => "27655.98",
+       "time" => 1679553796677
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27655.98",
+       "qty" => "5.067241",
+       "quoteQty" => "140139.51575118",
+       "time" => 1679553796658
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27655.98",
+       "qty" => "7.107672",
+       "quoteQty" => "196569.63467856",
+       "time" => 1679553796635
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27650",
+       "qty" => "0.002096",
+       "quoteQty" => "57.9544",
+       "time" => 1679553796063
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27636.58",
+       "qty" => "0.164345",
+       "quoteQty" => "4541.9337401",
+       "time" => 1679553795638
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27636.58",
+       "qty" => "0.282964",
+       "quoteQty" => "7820.15722312",
+       "time" => 1679553795638
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27636.4",
+       "qty" => "0.003983",
+       "quoteQty" => "110.0757812",
+       "time" => 1679553735635
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27636.4",
+       "qty" => "0.043898",
+       "quoteQty" => "1213.1826872",
+       "time" => 1679553735630
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27636.4",
+       "qty" => "0.031095",
+       "quoteQty" => "859.353858",
+       "time" => 1679553735621
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27634.92",
+       "qty" => "0.0142",
+       "quoteQty" => "392.415864",
+       "time" => 1679553733629
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27632.24",
+       "qty" => "0.003857",
+       "quoteQty" => "106.57754968",
+       "time" => 1679553732139
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.09",
+       "qty" => "0.011484",
+       "quoteQty" => "317.41879356",
+       "time" => 1679553711634
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.09",
+       "qty" => "0.007016",
+       "quoteQty" => "193.92287144",
+       "time" => 1679553711628
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.09",
+       "qty" => "0.018479",
+       "quoteQty" => "510.76122311",
+       "time" => 1679553711620
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27641.09",
+       "qty" => "0.000361",
+       "quoteQty" => "9.97843349",
+       "time" => 1679553699119
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.84",
+       "qty" => "0.0018",
+       "quoteQty" => "49.753512",
+       "time" => 1679553695632
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.84",
+       "qty" => "0.01267",
+       "quoteQty" => "350.2094428",
+       "time" => 1679553695627
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.84",
+       "qty" => "0.001118",
+       "quoteQty" => "30.90245912",
+       "time" => 1679553695620
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.89",
+       "qty" => "0.001963",
+       "quoteQty" => "54.25906707",
+       "time" => 1679553694661
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.89",
+       "qty" => "0.001",
+       "quoteQty" => "27.64089",
+       "time" => 1679553694655
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.89",
+       "qty" => "0.004059",
+       "quoteQty" => "112.19437251",
+       "time" => 1679553694649
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.9",
+       "qty" => "0.00248",
+       "quoteQty" => "68.549432",
+       "time" => 1679553694644
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.9",
+       "qty" => "0.003142",
+       "quoteQty" => "86.8477078",
+       "time" => 1679553694639
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.9",
+       "qty" => "0.003378",
+       "quoteQty" => "93.3709602",
+       "time" => 1679553694631
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.94",
+       "qty" => "0.002562",
+       "quoteQty" => "70.81608828",
+       "time" => 1679553693630
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.94",
+       "qty" => "0.01194",
+       "quoteQty" => "330.0328236",
+       "time" => 1679553693626
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.88",
+       "qty" => "0.001282",
+       "quoteQty" => "35.43560816",
+       "time" => 1679553691652
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.88",
+       "qty" => "0.003259",
+       "quoteQty" => "90.08162792",
+       "time" => 1679553691644
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.88",
+       "qty" => "0.001434",
+       "quoteQty" => "39.63702192",
+       "time" => 1679553691639
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.89",
+       "qty" => "0.002118",
+       "quoteQty" => "58.54340502",
+       "time" => 1679553691631
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.89",
+       "qty" => "0.003563",
+       "quoteQty" => "98.48449107",
+       "time" => 1679553691626
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.89",
+       "qty" => "0.003714",
+       "quoteQty" => "102.65826546",
+       "time" => 1679553691618
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.92",
+       "qty" => "0.00269",
+       "quoteQty" => "74.3540748",
+       "time" => 1679553690648
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.92",
+       "qty" => "0.001277",
+       "quoteQty" => "35.29745484",
+       "time" => 1679553690638
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.92",
+       "qty" => "0.012055",
+       "quoteQty" => "333.2112906",
+       "time" => 1679553690632
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.95",
+       "qty" => "0.056369",
+       "quoteQty" => "1558.09271055",
+       "time" => 1679553689633
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.96",
+       "qty" => "0.01025",
+       "quoteQty" => "283.31984",
+       "time" => 1679553689626
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.95",
+       "qty" => "0.004935",
+       "quoteQty" => "136.40808825",
+       "time" => 1679553688662
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => false,
+       "price" => "27640.95",
+       "qty" => "0.004868",
+       "quoteQty" => "134.5561446",
+       "time" => 1679553688656
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.95",
+       "qty" => "0.001527",
+       "quoteQty" => "42.20773065",
+       "time" => 1679553688641
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.92",
+       "qty" => "0.011527",
+       "quoteQty" => "318.61688484",
+       ...
+     },
+     %{
+       "id" => nil,
+       "isBestMatch" => true,
+       "isBuyerMaker" => true,
+       "price" => "27640.92",
+       "qty" => "0.002758",
+       ...
+     },
+     %{"id" => nil, "isBestMatch" => true, "isBuyerMaker" => true, "price" => "27639.88", ...},
+     %{"id" => nil, "isBestMatch" => true, "isBuyerMaker" => true, ...},
+     %{"id" => nil, "isBestMatch" => true, ...},
+     %{"id" => nil, ...},
+     %{...},
+     ...
+   ],
+   status: 200
+ }}
+```
+
+```elixir
+Spot.public() |> Spot.compressed_trades(symbol: "BTCUSDT", limit: 1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok,
+ %{
+   result: [
+     %{
+       "M" => true,
+       "T" => 1679553856000,
+       "a" => nil,
+       "f" => nil,
+       "l" => nil,
+       "m" => true,
+       "p" => "27660.19",
+       "q" => "0.114404"
+     }
+   ],
+   status: 200
+ }}
+```
+
+```elixir
+Spot.public() |> Spot.kline(symbol: "BTCUSDT", limit: 1, interval: "1m")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:ok,
+ %{
+   result: [
+     [1679553840000, "27667.74", "27670.3", "27656.95", "27656.95", "2.214687", 1679553900000,
+      "61261.94"]
+   ],
+   status: 200
+ }}
+```
