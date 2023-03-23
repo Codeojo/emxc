@@ -1,23 +1,8 @@
 defmodule Emxc.Utilities do
   @doc """
-  Load a JSON file from the current directory.
-
-  __NOTE__: This function is meant to be used in Macros/Metaprogramming.
+  Unwraps a Tesla response into a tuple of `{:ok, map()}` or `{:error, any()}`.
   """
-  def load_json(file, path) do
-    Path.expand(file, path) |> File.read!() |> Jason.decode!()
-  end
-
-  @doc """
-  Parses a Postman Environment JSON file into a Map.
-  """
-  def parse_environment(json) do
-    json
-    |> Map.get("values", [])
-    |> Stream.filter(fn x -> x["enabled"] === true end)
-    |> Enum.reduce(%{}, fn x, acc -> Map.put(acc, x["key"], x["value"]) end)
-  end
-
+  @spec unwrap_response(any()) :: {:ok, map()} | {:error, any()} | no_return()
   def unwrap_response({:ok, %Tesla.Env{} = e}) do
     {:ok,
      %{

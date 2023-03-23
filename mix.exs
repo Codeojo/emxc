@@ -4,7 +4,7 @@ defmodule Emxc.MixProject do
   def project do
     [
       app: :emxc,
-      version: "0.0.2",
+      version: "0.0.3",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -26,7 +26,8 @@ defmodule Emxc.MixProject do
       {:tesla, "~> 1.4"},
       {:hackney, "~> 1.17"},
       {:jason, ">= 1.0.0"},
-      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false},
+      {:decimal, "~> 2.0"}
     ]
   end
 
