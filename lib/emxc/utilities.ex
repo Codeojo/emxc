@@ -18,17 +18,6 @@ defmodule Emxc.Utilities do
     |> Enum.reduce(%{}, fn x, acc -> Map.put(acc, x["key"], x["value"]) end)
   end
 
-  @doc """
-  Parses a Postman Collection JSON file into a list of requests.
-  """
-  def parse_requests(json) do
-    json
-    |> Map.get("item", [])
-    |> Enum.map(fn x -> x["item"] end)
-    |> List.flatten()
-    |> Enum.map(fn x -> x["request"] end)
-  end
-
   def unwrap_response({:ok, %Tesla.Env{} = e}) do
     {:ok,
      %{
