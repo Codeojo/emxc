@@ -4,7 +4,7 @@ defmodule Emxc.MixProject do
   def project do
     [
       app: :emxc,
-      version: "0.0.3",
+      version: "0.0.4",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -50,7 +50,8 @@ defmodule Emxc.MixProject do
       groups_for_docs: [
         API: &(&1[:section] == :api),
         Utilities: &(&1[:section] == :utilities),
-        "Market Data": &(&1[:section] == :market_data)
+        "Market Data": &(&1[:section] == :market_data),
+        "ETF": &(&1[:section] == :etf),
       ]
     ]
   end
