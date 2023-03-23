@@ -1,6 +1,6 @@
 # Emxc
 
-**TODO: Add description**
+a Tesla REST client for the MEXC Exchange
 
 ## Installation
 
@@ -10,12 +10,9 @@ by adding `emxc` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:emxc, "~> 0.1.0"}
+    {:emxc, "~> 0.0.1"}
   ]
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/emxc>.
-
+Made with ❤️ in partnership with Codeojo, Threephase Technology, TradeStudio, and MEXC Global.
