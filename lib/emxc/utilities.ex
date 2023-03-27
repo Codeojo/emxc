@@ -1,4 +1,6 @@
 defmodule Emxc.Utilities do
+  @docs_api_key "mx0aBYs33eIilxBWC5"
+  @docs_secret_key "45d0b3c26f2644f19bfb98b07741b2f5"
   @doc """
   Unwraps a Tesla response into a tuple of `{:ok, map()}` or `{:error, any()}`.
   """
@@ -27,10 +29,10 @@ defmodule Emxc.Utilities do
 
   @doc """
   Generates an HMAC-256 signature for a given set of query parameters.
-
+  
   ## Example
       iex> query = [symbol: "BTCUSDT", side: "BUY", type: "LIMIT", quantity: 1, price: 11, recvWindow: 5000, timestamp: 1644489390087]
-      iex> secret_key = "45d0b3c26f2644f19bfb98b07741b2f5"
+      iex> secret_key = "#{@docs_secret_key}"
       iex> Emxc.Utilities.sign_get_query(query, secret_key)
       "fd3e4e8543c5188531eb7279d68ae7d26a573d0fc5ab0d18eb692451654d837a"
   """
@@ -45,7 +47,7 @@ defmodule Emxc.Utilities do
 
   @doc """
     Signs a given string using the HMAC SHA-256 algorithm.
-
+  
   ## Example
       iex> Emxc.Utilities.sign_sha256("foo", "bar")
       "f9320baf0249169e73850cd6156ded0106e2bb6ad8cab01b7bbbebe6d1065317"
@@ -55,5 +57,25 @@ defmodule Emxc.Utilities do
     :crypto.mac(:hmac, :sha256, key, content)
     |> Base.encode16()
     |> String.downcase()
+  end
+
+  @doc """
+  Generates a timestamp in milliseconds.
+  
+  ## Example
+      iex> Emxc.Utilities.timestamp() |> is_integer()
+      true
+  """
+  @spec timestamp() :: integer()
+  def timestamp() do
+    :os.system_time(:millisecond)
+  end
+
+  def docs_api_key do
+    @docs_api_key
+  end
+
+  def docs_secret_key do
+    @docs_secret_key
   end
 end
