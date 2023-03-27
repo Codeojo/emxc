@@ -1,7 +1,9 @@
 defmodule Emxc.Global.Spot.V3 do
-  import Emxc.Utilities, only: [unwrap_response: 1]
+  import Emxc.Utilities, only: [unwrap_response: 1, timestamp: 0, sign_get_query: 2]
 
   @base_url "https://api.mexc.com"
+  @docs_api_key Emxc.Utilities.docs_api_key()
+  @docs_secret_key Emxc.Utilities.docs_secret_key()
 
   @type response :: {:ok, map()} | {:error, any()} | no_return()
   @type client :: Tesla.Client.t()
@@ -356,4 +358,414 @@ defmodule Emxc.Global.Spot.V3 do
   @doc section: :etf
   def etf_info(client, opts \\ []),
     do: client |> Tesla.get("/api/v3/etf/info", query: opts) |> unwrap_response()
+
+  # Sub-Accounts
+
+  @doc """
+  Get sub-account list.
+
+  ## Options
+
+    * `:subAccount` - Sub-account name.
+    * `:isFreeze` - Frozen or unfrozen status. (`true` or `false`)
+    * `:page` - Page number. Defaults to `1`.
+    * `:limit` - Number of items per page. Defaults to `10`. Max `200`.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_list("#{@docs_secret_key}")
+      iex> response.status
+      401
+  """
+  @type subaccount_list_option ::
+          {:subAccount, String.t()}
+          | {:isFreeze, boolean()}
+          | {:page, integer()}
+          | {:limit, integer()}
+          | {:recvWindow, integer()}
+  @spec subaccount_list(client(), String.t(), [subaccount_list_option()]) :: response()
+  @doc section: :sub_accounts
+  def subaccount_list(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get("/api/v3/sub-account/list", query: query)
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Create a sub-account (for master account).
+
+  ## Options
+
+    * `:subAccount` - Sub-account name.
+    * `:note` - Sub-account notes.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_create("#{@docs_secret_key}", subAccount: "test_sub_account", note: "test_note")
+      iex> response.status
+      401
+  """
+  @type subaccount_create_option ::
+          {:subAccount, String.t()}
+          | {:note, String.t()}
+          | {:recvWindow, integer()}
+  @spec subaccount_create(client(), String.t(), [subaccount_create_option()]) :: response()
+  @doc section: :sub_accounts
+  def subaccount_create(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/sub-account/virtualSubAccount?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Create a sub-account API key (for master account).
+
+  ## Options
+
+    * `:subAccount` - Sub-account name.
+    * `:note` - API-key notes.
+    * `:permissions` - API-key permissions, as a comma-separated string. Any combination of: `SPOT_ACCOUNT_READ, SPOT_ACCOUNT_WRITE, SPOT_DEAL_READ, SPOT_DEAL_WRITE, ISOLATED_MARGIN_ACCOUNT_READ, ISOLATED_MARGIN_ACCOUNT_WRITE, ISOLATED_MARGIN_DEAL_READ, ISOLATED_MARGIN_DEAL_WRITE, CONTRACT_ACCOUNT_READ, CONTRACT_ACCOUNT_WRITE, CONTRACT_DEAL_READ, CONTRACT_DEAL_WRITE, SPOT_TRANSFER_READ, SPOT_TRANSFER_WRITE`
+    * `:ip` - IP address whitelist as a comma-separated string, up to a maximum of 20.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+
+        iex> alias Emxc.Global.Spot.V3, as: Spot
+        iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_api_key_create("#{@docs_secret_key}", subAccount: "test_sub_account", note: "test_note", permissions: "SPOT_ACCOUNT_READ, SPOT_ACCOUNT_WRITE, SPOT_DEAL_READ, SPOT_DEAL_WRITE, ISOLATED_MARGIN_ACCOUNT_READ, ISOLATED_MARGIN_ACCOUNT_WRITE, ISOLATED_MARGIN_DEAL_READ, ISOLATED_MARGIN_DEAL_WRITE, CONTRACT_ACCOUNT_READ, CONTRACT_ACCOUNT_WRITE, CONTRACT_DEAL_READ, CONTRACT_DEAL_WRITE, SPOT_TRANSFER_READ, SPOT_TRANSFER_WRITE")
+        iex> response.status
+        401
+  """
+  @type subaccount_api_key_create_option ::
+          {:subAccount, String.t()}
+          | {:note, String.t()}
+          | {:permissions, String.t()}
+          | {:ip, String.t()}
+          | {:recvWindow, integer()}
+  @spec subaccount_api_key_create(client(), String.t(), [subaccount_api_key_create_option()]) ::
+          response()
+  @doc section: :sub_accounts
+  def subaccount_api_key_create(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/sub-account/apiKey?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Query sub-account API key (for master account).
+
+  ## Options
+
+    * `:subAccount` - Sub-account name.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_api_key_query("#{@docs_secret_key}", subAccount: "test_sub_account")
+      iex> response.status
+      401
+  """
+  @type subaccount_api_key_query_option ::
+          {:subAccount, String.t()}
+          | {:recvWindow, integer()}
+  @spec subaccount_api_key_query(client(), String.t(), [subaccount_api_key_query_option()]) ::
+          response()
+  @doc section: :sub_accounts
+  def subaccount_api_key_query(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get("/api/v3/sub-account/apiKey", query: query)
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Delete sub-account API key (for master account).
+
+  ## Options
+
+    * `:subAccount` - Sub-account name.
+    * :`apiKey` - API-key to delete.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_api_key_delete("#{@docs_secret_key}", subAccount: "test_sub_account", apiKey: "#{@docs_api_key}")
+      iex> response.status
+      401
+  """
+  @type subaccount_api_key_delete_option ::
+          {:subAccount, String.t()}
+          | {:apiKey, String.t()}
+          | {:recvWindow, integer()}
+  @spec subaccount_api_key_delete(client(), String.t(), [subaccount_api_key_delete_option()]) ::
+          response()
+  @doc section: :sub_accounts
+  def subaccount_api_key_delete(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.delete(
+        "/api/v3/sub-account/apiKey",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Universal transfer (for master account).
+
+  ## Options
+
+    * `:fromAccount` - Account to transfer from. Will transfer from master account by default if `fromAccount` is not sent.
+    * `:toAccount` - Account to transfer to. Will transfer to master account by default if `toAccount` is not sent.
+    * `:fromAccountType` - Account type to transfer from. One of: `"SPOT"`, `"FUTURES"`, `"ISOLATED_MARGIN"`.
+    * `:toAccountType` - Account type to transfer to. One of: `"SPOT"`, `"FUTURES"`, `"ISOLATED_MARGIN"`.
+    * `:symbol` - Asset to transfer. Only supported for `"ISOLATED_MARGIN"` account type.
+    * `:asset` - Asset to transfer.
+    * `:amount` - Amount to transfer.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_universal_transfer_create("#{@docs_secret_key}", fromAccount: "test_sub_account", toAccount: "test_sub_account", asset: "BTC", amount: 0.1)
+      iex> response.status
+      401
+  """
+  @type subaccount_universal_transfer_create_option ::
+          {:fromAccount, String.t()}
+          | {:toAccount, String.t()}
+          | {:fromAccountType, String.t()}
+          | {:toAccountType, String.t()}
+          | {:symbol, String.t()}
+          | {:asset, String.t()}
+          | {:amount, float()}
+          | {:recvWindow, integer()}
+  @spec subaccount_universal_transfer_create(client(), String.t(), [
+          subaccount_universal_transfer_create_option()
+        ]) :: response()
+  @doc section: :sub_accounts
+  def subaccount_universal_transfer_create(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/capital/sub-account/universalTransfer?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Query universal transfer history (for master account).
+
+  ## Options
+
+    * `:fromAccount` - Account to transfer from. Will transfer from master account by default if `fromAccount` is not sent.
+    * `:toAccount` - Account to transfer to. Will transfer to master account by default if `toAccount` is not sent.
+    * `:fromAccountType` - Account type to transfer from. One of: `"SPOT"`, `"FUTURES"`, `"ISOLATED_MARGIN"`.
+    * `:toAccountType` - Account type to transfer to. One of: `"SPOT"`, `"FUTURES"`, `"ISOLATED_MARGIN"`.
+    * `:startTime` - Start time of transfer.
+    * `:endTime` - End time of transfer.
+    * `:page` - Current page. Defaults to `1`.
+    * `:limit` - Page size. Defaults to `500`, max `500`.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_universal_transfer_history("#{@docs_secret_key}", fromAccount: "test_sub_account", toAccount: "test_sub_account", fromAccountType: "SPOT", toAccountType: "SPOT")
+      iex> response.status
+      401
+  """
+  @type subaccount_universal_transfer_history_option ::
+          {:fromAccount, String.t()}
+          | {:toAccount, String.t()}
+          | {:fromAccountType, String.t()}
+          | {:toAccountType, String.t()}
+          | {:startTime, integer()}
+          | {:endTime, integer()}
+          | {:page, integer()}
+          | {:limit, integer()}
+          | {:recvWindow, integer()}
+  @spec subaccount_universal_transfer_history(client(), String.t(), [
+          subaccount_universal_transfer_history_option()
+        ]) :: response()
+  @doc section: :sub_accounts
+  def subaccount_universal_transfer_history(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get(
+        "/api/v3/capital/sub-account/universalTransfer",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Enable futures for sub-account (for master account).
+
+  ## Options
+
+    * `:subAccount` - Sub-account to enable futures for.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_futures_enable("#{@docs_secret_key}", subAccount: "test_sub_account")
+      iex> response.status
+      401
+  """
+  @type subaccount_futures_enable_option ::
+          {:subAccount, String.t()}
+          | {:recvWindow, integer()}
+  @spec subaccount_futures_enable(client(), String.t(), [subaccount_futures_enable_option()]) ::
+          response()
+  @doc section: :sub_accounts
+  def subaccount_futures_enable(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/sub-account/futures?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Enable margin for sub-account (for master account).
+
+  ## Options
+
+    * `:subAccount` - Sub-account to enable margin for.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_margin_enable("#{@docs_secret_key}", subAccount: "test_sub_account")
+      iex> response.status
+      401
+  """
+  @type subaccount_margin_enable_option ::
+          {:subAccount, String.t()}
+          | {:recvWindow, integer()}
+  @spec subaccount_margin_enable(client(), String.t(), [subaccount_margin_enable_option()]) ::
+          response()
+  @doc section: :sub_accounts
+  def subaccount_margin_enable(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/sub-account/margin?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
 end

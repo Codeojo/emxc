@@ -51,7 +51,8 @@ defmodule Emxc.MixProject do
         API: &(&1[:section] == :api),
         Utilities: &(&1[:section] == :utilities),
         "Market Data": &(&1[:section] == :market_data),
-        "ETF": &(&1[:section] == :etf),
+        "Sub Accounts": &(&1[:section] == :sub_accounts),
+        ETF: &(&1[:section] == :etf)
       ]
     ]
   end
