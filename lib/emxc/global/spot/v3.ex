@@ -768,4 +768,583 @@ defmodule Emxc.Global.Spot.V3 do
       |> unwrap_response()
     end)
   end
+
+  # Spot Account/Trade Endpoints
+  @doc """
+  User API default symbols.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.default_symbols("#{@docs_secret_key}")
+      iex> response.status
+      401
+  """
+  @spec default_symbols(client(), String.t()) :: response()
+  @doc section: :spot_account_trade
+  def default_symbols(client, secret_key) do
+    []
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get(
+        "/api/v3/selfSymbols",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Test new order.
+
+  ## Options
+
+    * `:symbol` - Symbol to trade.
+    * `:side` - Trade side. `"BUY"` or `"SELL"`.
+    * `:type` - Order type. On of `"LIMIT"`, `"MARKET"`, `"LIMIT_MAKER"`, `"IMMEDIATE_OR_CANCEL"`, `"FILL_OR_KILL"`.
+    * `:quantity` - Order quantity.
+    * `:quoteOrderQty` - Quote order quantity.
+    * `:price` - Order price.
+    * `:newClientOrderId` - A unique id for the order.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.test_new_order("#{@docs_secret_key}", symbol: "BTCUSDT", side: "BUY", type: "LIMIT", quantity: 1, price: 100)
+      iex> response.status
+      401
+  """
+  @type test_new_order_option ::
+          {:symbol, String.t()}
+          | {:side, String.t()}
+          | {:type, String.t()}
+          | {:quantity, float()}
+          | {:quoteOrderQty, float()}
+          | {:price, float()}
+          | {:newClientOrderId, String.t()}
+          | {:recvWindow, integer()}
+  @spec test_new_order(client(), String.t(), [test_new_order_option()]) :: response()
+  @doc section: :spot_account_trade
+  def test_new_order(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/order/test",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  New order.
+
+  ## Options
+
+    * `:symbol` - Symbol to trade.
+    * `:side` - Trade side. `"BUY"` or `"SELL"`.
+    * `:type` - Order type. On of `"LIMIT"`, `"MARKET"`, `"LIMIT_MAKER"`, `"IMMEDIATE_OR_CANCEL"`, `"FILL_OR_KILL"`.
+    * `:quantity` - Order quantity.
+    * `:quoteOrderQty` - Quote order quantity.
+    * `:price` - Order price.
+    * `:newClientOrderId` - A unique id for the order.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.new_order("#{@docs_secret_key}", symbol: "BTCUSDT", side: "BUY", type: "LIMIT", quantity: 1, price: 100)
+      iex> response.status
+      401
+  """
+  @type new_order_option ::
+          {:symbol, String.t()}
+          | {:side, String.t()}
+          | {:type, String.t()}
+          | {:quantity, float()}
+          | {:quoteOrderQty, float()}
+          | {:price, float()}
+          | {:newClientOrderId, String.t()}
+          | {:recvWindow, integer()}
+  @spec new_order(client(), String.t(), [new_order_option()]) :: response()
+  @doc section: :spot_account_trade
+  def new_order(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/order",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Batch orders.
+
+  ## Options
+
+    * `:batchOrders` - Batch orders. A list of order structs.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Order struct
+
+      * `:symbol` - Symbol to trade.
+      * `:side` - Trade side. `"BUY"` or `"SELL"`.
+      * `:type` - Order type. On of `"LIMIT"`, `"MARKET"`, `"LIMIT_MAKER"`, `"IMMEDIATE_OR_CANCEL"`, `"FILL_OR_KILL"`.
+      * `:quantity` - Order quantity.
+      * `:quoteOrderQty` - Quote order quantity.
+      * `:price` - Order price.
+      * `:newClientOrderId` - A unique id for the order.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.batch_orders("#{@docs_secret_key}", batchOrders: [%{symbol: "BTCUSDT", side: "BUY", type: "LIMIT", quantity: 1, price: 100}])
+      iex> response.status
+      401
+  """
+  @type batch_orders_option ::
+          {:batchOrders, list()}
+          | {:recvWindow, integer()}
+  @spec batch_orders(client(), String.t(), [batch_orders_option()]) :: response()
+  @doc section: :spot_account_trade
+  def batch_orders(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      {batch_orders, query} = Keyword.pop(query, :batchOrders, [])
+
+      query =
+        Keyword.put(
+          query,
+          :batchOrders,
+          batch_orders |> Jason.encode!() |> Jason.Formatter.minimize()
+        )
+
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/batchOrders?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Cancel order.
+
+  ## Options
+
+    * `:symbol` - Symbol to trade.
+    * `:orderId` - Order id.
+    * `:origClientOrderId` - Original client order id.
+    * `:newClientOrderId` - A unique id for the order.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.cancel_order("#{@docs_secret_key}", symbol: "BTCUSDT", orderId: 1)
+      iex> response.status
+      401
+  """
+  @type cancel_order_option ::
+          {:symbol, String.t()}
+          | {:orderId, integer()}
+          | {:origClientOrderId, String.t()}
+          | {:newClientOrderId, String.t()}
+          | {:recvWindow, integer()}
+  @spec cancel_order(client(), String.t(), [cancel_order_option()]) :: response()
+  @doc section: :spot_account_trade
+  def cancel_order(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.delete(
+        "/api/v3/order",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Cancel all open orders on a symbol.
+
+  ## Options
+
+    * `:symbol` - Symbols to cancel, comma-separated list in a string. Maximum `5` symbols per request.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.cancel_all_open_orders("#{@docs_secret_key}", symbol: "BTCUSDT")
+      iex> response.status
+      401
+  """
+  @type cancel_all_open_orders_option ::
+          {:symbol, String.t()}
+          | {:recvWindow, integer()}
+  @spec cancel_all_open_orders(client(), String.t(), [cancel_all_open_orders_option()]) ::
+          response()
+  @doc section: :spot_account_trade
+  def cancel_all_open_orders(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.delete(
+        "/api/v3/openOrders",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Query order.
+
+  ## Options
+
+    * `:symbol` - Symbol to trade.
+    * `:origClientOrderId` - Original client order id.
+    * `:orderId` - Order id.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.query_order("#{@docs_secret_key}", symbol: "BTCUSDT", orderId: 1)
+      iex> response.status
+      401
+  """
+  @type query_order_option ::
+          {:symbol, String.t()}
+          | {:origClientOrderId, String.t()}
+          | {:orderId, integer()}
+          | {:recvWindow, integer()}
+  @spec query_order(client(), String.t(), [query_order_option()]) :: response()
+  @doc section: :spot_account_trade
+  def query_order(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get(
+        "/api/v3/order",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Get all open orders on a symbol. ***Careful*** when accessing this with no symbol.
+
+  ## Options
+
+    * `:symbol` - Symbol to trade. If not sent, orders for all symbols will be returned in an array.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.open_orders("#{@docs_secret_key}", symbol: "BTCUSDT")
+      iex> response.status
+      401
+  """
+  @type open_orders_option ::
+          {:symbol, String.t()}
+          | {:recvWindow, integer()}
+  @spec open_orders(client(), String.t(), [open_orders_option()]) :: response()
+  @doc section: :spot_account_trade
+  def open_orders(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get(
+        "/api/v3/openOrders",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Query all account orders.
+
+  ## Options
+
+    * `:symbol` - Symbol to trade.
+    * `:startTime` - Start time.
+    * `:endTime` - End time.
+    * `:limit` - Limit.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.all_orders("#{@docs_secret_key}", symbol: "BTCUSDT")
+      iex> response.status
+      401
+  """
+  @type all_orders_option ::
+          {:symbol, String.t()}
+          | {:startTime, integer()}
+          | {:endTime, integer()}
+          | {:limit, integer()}
+          | {:recvWindow, integer()}
+  @spec all_orders(client(), String.t(), [all_orders_option()]) :: response()
+  @doc section: :spot_account_trade
+  def all_orders(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get(
+        "/api/v3/allOrders",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Account information.
+
+  ## Options
+
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.account("#{@docs_secret_key}")
+      iex> response.status
+      401
+  """
+  @type account_option ::
+          {:recvWindow, integer()}
+  @spec account(client(), String.t(), [account_option()]) :: response()
+  @doc section: :spot_account_trade
+  def account(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get(
+        "/api/v3/account",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Account trade list.
+
+  ## Options
+
+    * `:symbol` - Symbol to trade.
+    * `:orderId` - Order id.
+    * `:startTime` - Start time.
+    * `:endTime` - End time.
+    * `:limit` - Limit. Default `500`; max `1000`.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.account_trades("#{@docs_secret_key}", symbol: "BTCUSDT")
+      iex> response.status
+      401
+  """
+  @type account_trades_option ::
+          {:symbol, String.t()}
+          | {:orderId, integer()}
+          | {:startTime, integer()}
+          | {:endTime, integer()}
+          | {:limit, integer()}
+          | {:recvWindow, integer()}
+  @spec account_trades(client(), String.t(), [account_trades_option()]) :: response()
+  @doc section: :spot_account_trade
+  def account_trades(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get(
+        "/api/v3/myTrades",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Enable MX Deduct.
+
+  ## Options
+
+    * `:mxDeductEnable` - `true` or `false`.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.enable_mx_deduct("#{@docs_secret_key}", mxDeductEnable: true)
+      iex> response.status
+      401
+  """
+  @type enable_mx_deduct_option ::
+          {:mxDeductEnable, boolean()}
+          | {:recvWindow, integer()}
+  @spec enable_mx_deduct(client(), String.t(), [enable_mx_deduct_option()]) :: response()
+  @doc section: :spot_account_trade
+  def enable_mx_deduct(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/mxDeduct/enable?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Query MX Deduct status.
+
+  ## Options
+
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.mx_deduct_status("#{@docs_secret_key}")
+      iex> response.status
+      401
+  """
+  @type mx_deduct_status_option ::
+          {:recvWindow, integer()}
+  @spec mx_deduct_status(client(), String.t(), [mx_deduct_status_option()]) :: response()
+  @doc section: :spot_account_trade
+  def mx_deduct_status(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get(
+        "/api/v3/mxDeduct/enable",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
 end
