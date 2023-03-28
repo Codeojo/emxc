@@ -50,10 +50,9 @@ defmodule Emxc.MixProject do
       groups_for_docs: [
         API: &(&1[:section] == :api),
         Utilities: &(&1[:section] == :utilities),
-        "Market Data": &(&1[:section] == :market_data),
-        "Sub Accounts": &(&1[:section] == :sub_accounts),
-        "Spot Account/Trade": &(&1[:section] == :spot_account_trade),
-        ETF: &(&1[:section] == :etf)
+        "Market Data (Public)": &(&1[:section] == :market_data),
+        "Sub Accounts (Signed)": &(&1[:section] == :sub_accounts),
+        "Spot Account/Trade (Signed)": &(&1[:section] == :spot_account_trade)
       ]
     ]
   end

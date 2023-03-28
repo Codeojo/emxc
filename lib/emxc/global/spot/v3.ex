@@ -355,7 +355,7 @@ defmodule Emxc.Global.Spot.V3 do
   """
   @type etf_info_option :: {:symbol, String.t()}
   @spec etf_info(client(), [etf_info_option()]) :: response()
-  @doc section: :etf
+  @doc section: :market_data
   def etf_info(client, opts \\ []),
     do: client |> Tesla.get("/api/v3/etf/info", query: opts) |> unwrap_response()
 
@@ -918,13 +918,13 @@ defmodule Emxc.Global.Spot.V3 do
 
   ## Order struct
 
-      * `:symbol` - Symbol to trade.
-      * `:side` - Trade side. `"BUY"` or `"SELL"`.
-      * `:type` - Order type. On of `"LIMIT"`, `"MARKET"`, `"LIMIT_MAKER"`, `"IMMEDIATE_OR_CANCEL"`, `"FILL_OR_KILL"`.
-      * `:quantity` - Order quantity.
-      * `:quoteOrderQty` - Quote order quantity.
-      * `:price` - Order price.
-      * `:newClientOrderId` - A unique id for the order.
+    * `:symbol` - Symbol to trade.
+    * `:side` - Trade side. `"BUY"` or `"SELL"`.
+    * `:type` - Order type. On of `"LIMIT"`, `"MARKET"`, `"LIMIT_MAKER"`, `"IMMEDIATE_OR_CANCEL"`, `"FILL_OR_KILL"`.
+    * `:quantity` - Order quantity.
+    * `:quoteOrderQty` - Quote order quantity.
+    * `:price` - Order price.
+    * `:newClientOrderId` - A unique id for the order.
 
   ## Example
       iex> alias Emxc.Global.Spot.V3, as: Spot
