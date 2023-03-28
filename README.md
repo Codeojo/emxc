@@ -1,6 +1,6 @@
 # Emxc
 
-a Tesla REST client for the MEXC Exchange
+A Tesla REST client for the MEXC Exchange
 
 ## Installation
 
