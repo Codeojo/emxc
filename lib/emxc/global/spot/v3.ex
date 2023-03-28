@@ -1347,4 +1347,610 @@ defmodule Emxc.Global.Spot.V3 do
       |> unwrap_response()
     end)
   end
+
+  # Wallet Endpoints
+  @doc """
+  Query currency details.
+
+  ## Options
+
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.currency_details("#{@docs_secret_key}")
+      iex> response.status
+      401
+  """
+  @type currency_details_option ::
+          {:recvWindow, integer()}
+  @spec currency_details(client(), String.t(), [currency_details_option()]) :: response()
+  @doc section: :wallet
+  def currency_details(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get(
+        "/api/v3/capital/config/getall",
+        query: query
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Create withdrawal.
+
+  ## Options
+
+    * `:coin` - Coin to withdraw.
+    * `:withdrawOrderId` - Withdraw order id.
+    * `:network` - Network.
+    * `:address` - Address to withdraw.
+    * `:memo` - Memo.
+    * `:amount` - Amount to withdraw.
+    * `:remark` - Remark.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Examples
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.create_withdrawal("#{@docs_secret_key}", coin: "BTC", withdrawOrderId: "123456", network: "BTC", address: "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2", memo: "123", amount: 0.0001, remark: "123")
+      iex> response.status
+      401
+  """
+  @type create_withdrawal_option ::
+          {:coin, String.t()}
+          | {:withdrawOrderId, String.t()}
+          | {:network, String.t()}
+          | {:address, String.t()}
+          | {:memo, String.t()}
+          | {:amount, float()}
+          | {:remark, String.t()}
+          | {:recvWindow, integer()}
+  @spec create_withdrawal(client(), String.t(), [create_withdrawal_option()]) :: response()
+  @doc section: :wallet
+  def create_withdrawal(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/capital/withdraw/apply?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Cancel withdrawal.
+
+  ## Options
+
+    * `:id` - Withdraw id.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Examples
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.cancel_withdrawal("#{@docs_secret_key}", id: "123456")
+      iex> response.status
+      401
+  """
+  @type cancel_withdrawal_option ::
+          {:id, String.t()}
+          | {:recvWindow, integer()}
+  @spec cancel_withdrawal(client(), String.t(), [cancel_withdrawal_option()]) :: response()
+  @doc section: :wallet
+  def cancel_withdrawal(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.delete("/api/v3/capital/withdraw", query: query)
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Deposit history.
+
+  ## Options
+
+    * `:coin` - Coin to withdraw.
+    * `:status` - Status.
+    * `:startTime` - Start time.
+    * `:endTime` - End time.
+    * `:limit` - Limit. Defaults to `1000`, max `1000`.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Examples
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.deposit_history("#{@docs_secret_key}")
+      iex> response.status
+      401
+  """
+  @type deposit_history_option ::
+          {:coin, String.t()}
+          | {:status, integer()}
+          | {:startTime, integer()}
+          | {:endTime, integer()}
+          | {:limit, integer()}
+          | {:recvWindow, integer()}
+  @spec deposit_history(client(), String.t(), [deposit_history_option()]) :: response()
+  @doc section: :wallet
+  def deposit_history(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get("/api/v3/capital/deposit/hisrec", query: query)
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Withdrawal history.
+
+  ## Options
+
+    * `:coin` - Coin to withdraw.
+    * `:status` - Status.
+    * `:startTime` - Start time.
+    * `:endTime` - End time.
+    * `:limit` - Limit. Defaults to `1000`, max `1000`.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Examples
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.withdrawal_history("#{@docs_secret_key}")
+      iex> response.status
+      401
+  """
+  @type withdrawal_history_option ::
+          {:coin, String.t()}
+          | {:status, integer()}
+          | {:startTime, integer()}
+          | {:endTime, integer()}
+          | {:limit, integer()}
+          | {:recvWindow, integer()}
+  @spec withdrawal_history(client(), String.t(), [withdrawal_history_option()]) :: response()
+  @doc section: :wallet
+  def withdrawal_history(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get("/api/v3/capital/withdraw/history", query: query)
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Generate deposit address.
+
+  ## Options
+
+    * `:coin` - Coin to withdraw.
+    * `:network` - Network.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.generate_deposit_address("#{@docs_secret_key}", coin: "BTC", network: "BTC")
+      iex> response.status
+      401
+  """
+  @type generate_deposit_address_option ::
+          {:coin, String.t()}
+          | {:network, String.t()}
+          | {:recvWindow, integer()}
+  @spec generate_deposit_address(client(), String.t(), [generate_deposit_address_option()]) ::
+          response()
+  @doc section: :wallet
+  def generate_deposit_address(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/capital/deposit/address?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Get deposit address.
+
+  ## Options
+
+    * `:coin` - Coin to withdraw.
+    * `:network` - Network.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.get_deposit_address("#{@docs_secret_key}", coin: "BTC", network: "BTC")
+      iex> response.status
+      401
+  """
+  @type get_deposit_address_option ::
+          {:coin, String.t()}
+          | {:network, String.t()}
+          | {:recvWindow, integer()}
+  @spec get_deposit_address(client(), String.t(), [get_deposit_address_option()]) :: response()
+  @doc section: :wallet
+  def get_deposit_address(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get("/api/v3/capital/deposit/address", query: query)
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Get withdrawal address.
+
+  ## Options
+
+    * `:coin` - Coin to withdraw.
+    * `:page` - Page.
+    * `:limit` - Limit.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.get_withdrawal_address("#{@docs_secret_key}", coin: "BTC")
+      iex> response.status
+      401
+  """
+  @type get_withdrawal_address_option ::
+          {:coin, String.t()}
+          | {:page, integer()}
+          | {:limit, integer()}
+          | {:recvWindow, integer()}
+  @spec get_withdrawal_address(client(), String.t(), [get_withdrawal_address_option()]) ::
+          response()
+  @doc section: :wallet
+  def get_withdrawal_address(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get("/api/v3/capital/withdraw/address", query: query)
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Create universal transfer.
+
+  ## Options
+
+    * `:fromAccountType` - Account type to transfer from. One of `"SPOT"`, `"FUTURES"`, `"ISOLATED_MARGIN"`.
+    * `:toAccountType` - Account type to transfer to. One of `"SPOT"`, `"FUTURES"`, `"ISOLATED_MARGIN"`.
+    * `:asset` - Asset to transfer.
+    * `:amount` - Amount to transfer.
+    * `:symbol` - Symbol, needed when `fromAccountType` is `"ISOLATED_MARGIN"`.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.create_universal_transfer("#{@docs_secret_key}", fromAccountType: "SPOT", toAccountType: "FUTURES", asset: "BTC", amount: 0.1)
+      iex> response.status
+      401
+  """
+  @type create_universal_transfer_option ::
+          {:fromAccountType, String.t()}
+          | {:toAccountType, String.t()}
+          | {:asset, String.t()}
+          | {:amount, float()}
+          | {:symbol, String.t()}
+          | {:recvWindow, integer()}
+  @spec create_universal_transfer(client(), String.t(), [create_universal_transfer_option()]) ::
+          response()
+  @doc section: :wallet
+  def create_universal_transfer(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/capital/transfer?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Get universal transfer history.
+
+  ## Options
+
+    * `:fromAccountType` - Account type to transfer from. One of `"SPOT"`, `"FUTURES"`, `"ISOLATED_MARGIN"`.
+    * `:toAccountType` - Account type to transfer to. One of `"SPOT"`, `"FUTURES"`, `"ISOLATED_MARGIN"`.
+    * `:startTime` - Start time.
+    * `:endTime` - End time.
+    * `:page` - Page.
+    * `:size` - Size. Defaults to `10`, max `100`.
+    * `:symbol` - Symbol, needed when `fromAccountType` is `"ISOLATED_MARGIN"`.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.get_universal_transfer_history("#{@docs_secret_key}", fromAccountType: "SPOT", toAccountType: "FUTURES")
+      iex> response.status
+      401
+  """
+  @type get_universal_transfer_history_option ::
+          {:fromAccountType, String.t()}
+          | {:toAccountType, String.t()}
+          | {:startTime, integer()}
+          | {:endTime, integer()}
+          | {:page, integer()}
+          | {:size, integer()}
+          | {:symbol, String.t()}
+          | {:recvWindow, integer()}
+  @spec get_universal_transfer_history(client(), String.t(), [
+          get_universal_transfer_history_option()
+        ]) :: response()
+  @doc section: :wallet
+  def get_universal_transfer_history(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get("/api/v3/capital/transfer", query: query)
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Get user universal transfer history by transaction id.
+
+  ## Options
+
+    * `:tranId` - Transaction id.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.get_universal_transfer("#{@docs_secret_key}", tranId: "123456")
+      iex> response.status
+      401
+  """
+  @type get_universal_transfer_option ::
+          {:tranId, integer()}
+          | {:recvWindow, integer()}
+  @spec get_universal_transfer(client(), String.t(), [get_universal_transfer_option()]) ::
+          response()
+  @doc section: :wallet
+  def get_universal_transfer(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get("/api/v3/capital/transfer/tranId", query: query)
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Get assets that can be converted into MX.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.get_convertible_assets("#{@docs_secret_key}")
+      iex> response.status
+      401
+  """
+  @spec get_convertible_assets(client(), String.t()) :: response()
+  @doc section: :wallet
+  def get_convertible_assets(client, secret_key) do
+    query =
+      []
+      |> Keyword.put(:timestamp, timestamp())
+      |> then(fn query ->
+        signature =
+          query
+          |> sign_get_query(secret_key)
+
+        query
+        |> Keyword.put(:signature, signature)
+      end)
+
+    client
+    |> Tesla.get("/api/v3/capital/convert/list", query: query)
+    |> unwrap_response()
+  end
+
+  @doc """
+  Create Dust transfer.
+
+  ## Options
+
+    * `:asset` - Asset(s) to transfer. Up to 15 assets can be transferred in a single request, separated by commas.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.create_dust_transfer("#{@docs_secret_key}", asset: "BTC,FIL,ETH")
+      iex> response.status
+      401
+  """
+  @type create_dust_transfer_option ::
+          {:asset, String.t()}
+          | {:recvWindow, integer()}
+  @spec create_dust_transfer(client(), String.t(), [create_dust_transfer_option()]) :: response()
+  @doc section: :wallet
+  def create_dust_transfer(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.post(
+        "/api/v3/capital/convert?#{URI.encode_query(query)}",
+        query |> Enum.into(%{})
+      )
+      |> unwrap_response()
+    end)
+  end
+
+  @doc """
+  Get Dust transfer log.
+
+  ## Options
+
+    * `:startTime` - Start time.
+    * `:endTime` - End time.
+    * `:page` - Page.
+    * `:limit` - Limit. Defaults to `10`, max `100`.
+    * `:recvWindow` -  the number of milliseconds after timestamp the request is valid for. Defaults to `5000`.
+
+  ## Example
+      iex> alias Emxc.Global.Spot.V3, as: Spot
+      iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
+      ...> |> Spot.get_dust_transfer_log("#{@docs_secret_key}")
+      iex> response.status
+      401
+  """
+  @type get_dust_transfer_log_option ::
+          {:startTime, integer()}
+          | {:endTime, integer()}
+          | {:page, integer()}
+          | {:limit, integer()}
+          | {:recvWindow, integer()}
+  @spec get_dust_transfer_log(client(), String.t(), [get_dust_transfer_log_option()]) ::
+          response()
+  @doc section: :wallet
+  def get_dust_transfer_log(client, secret_key, opts \\ []) do
+    opts
+    |> Keyword.put(:timestamp, timestamp())
+    |> then(fn query ->
+      signature =
+        query
+        |> sign_get_query(secret_key)
+
+      query
+      |> Keyword.put(:signature, signature)
+    end)
+    |> then(fn query ->
+      client
+      |> Tesla.get("/api/v3/capital/convert", query: query)
+      |> unwrap_response()
+    end)
+  end
 end
