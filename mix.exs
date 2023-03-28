@@ -52,7 +52,8 @@ defmodule Emxc.MixProject do
         Utilities: &(&1[:section] == :utilities),
         "Market Data (Public)": &(&1[:section] == :market_data),
         "Sub Accounts (Signed)": &(&1[:section] == :sub_accounts),
-        "Spot Account/Trade (Signed)": &(&1[:section] == :spot_account_trade)
+        "Spot Account/Trade (Signed)": &(&1[:section] == :spot_account_trade),
+        "Wallet (Signed)": &(&1[:section] == :wallet)
       ]
     ]
   end
