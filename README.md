@@ -9,7 +9,7 @@ The package can be installed by adding `emxc` to your list of dependencies in `m
 ```elixir
 def deps do
   [
-    {:emxc, "~> 0.0.4"}
+    {:emxc, ">= 0.0.5"}
   ]
 end
 ```
