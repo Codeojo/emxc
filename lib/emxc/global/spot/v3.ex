@@ -84,7 +84,7 @@ defmodule Emxc.Global.Spot.V3 do
           | {:api_key, String.t()}
           | {:adapter, Tesla.Client.adapter()}
           | {:base_url, String.t()}
-  @spec authorized_client(Tesla.Env.headers()) :: client()
+  @spec authorized_client([authorized_option()]) :: client()
   @doc section: :api
   def authorized_client(opts \\ []) do
     base_url = Keyword.get(opts, :base_url, @base_url)
@@ -377,7 +377,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_list("#{@docs_secret_key}")
       iex> response.status
-      401
+      400
   """
   @type subaccount_list_option ::
           {:subAccount, String.t()}
@@ -419,7 +419,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_create("#{@docs_secret_key}", subAccount: "test_sub_account", note: "test_note")
       iex> response.status
-      401
+      400
   """
   @type subaccount_create_option ::
           {:subAccount, String.t()}
@@ -464,7 +464,7 @@ defmodule Emxc.Global.Spot.V3 do
         iex> alias Emxc.Global.Spot.V3, as: Spot
         iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_api_key_create("#{@docs_secret_key}", subAccount: "test_sub_account", note: "test_note", permissions: "SPOT_ACCOUNT_READ, SPOT_ACCOUNT_WRITE, SPOT_DEAL_READ, SPOT_DEAL_WRITE, ISOLATED_MARGIN_ACCOUNT_READ, ISOLATED_MARGIN_ACCOUNT_WRITE, ISOLATED_MARGIN_DEAL_READ, ISOLATED_MARGIN_DEAL_WRITE, CONTRACT_ACCOUNT_READ, CONTRACT_ACCOUNT_WRITE, CONTRACT_DEAL_READ, CONTRACT_DEAL_WRITE, SPOT_TRANSFER_READ, SPOT_TRANSFER_WRITE")
         iex> response.status
-        401
+        400
   """
   @type subaccount_api_key_create_option ::
           {:subAccount, String.t()}
@@ -508,7 +508,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_api_key_query("#{@docs_secret_key}", subAccount: "test_sub_account")
       iex> response.status
-      401
+      400
   """
   @type subaccount_api_key_query_option ::
           {:subAccount, String.t()}
@@ -547,7 +547,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_api_key_delete("#{@docs_secret_key}", subAccount: "test_sub_account", apiKey: "#{@docs_api_key}")
       iex> response.status
-      401
+      400
   """
   @type subaccount_api_key_delete_option ::
           {:subAccount, String.t()}
@@ -595,7 +595,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_universal_transfer_create("#{@docs_secret_key}", fromAccount: "test_sub_account", toAccount: "test_sub_account", asset: "BTC", amount: 0.1)
       iex> response.status
-      401
+      400
   """
   @type subaccount_universal_transfer_create_option ::
           {:fromAccount, String.t()}
@@ -650,7 +650,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_universal_transfer_history("#{@docs_secret_key}", fromAccount: "test_sub_account", toAccount: "test_sub_account", fromAccountType: "SPOT", toAccountType: "SPOT")
       iex> response.status
-      401
+      400
   """
   @type subaccount_universal_transfer_history_option ::
           {:fromAccount, String.t()}
@@ -699,7 +699,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_futures_enable("#{@docs_secret_key}", subAccount: "test_sub_account")
       iex> response.status
-      401
+      400
   """
   @type subaccount_futures_enable_option ::
           {:subAccount, String.t()}
@@ -740,7 +740,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.subaccount_margin_enable("#{@docs_secret_key}", subAccount: "test_sub_account")
       iex> response.status
-      401
+      400
   """
   @type subaccount_margin_enable_option ::
           {:subAccount, String.t()}
@@ -777,7 +777,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.default_symbols("#{@docs_secret_key}")
       iex> response.status
-      401
+      400
   """
   @spec default_symbols(client(), String.t()) :: response()
   @doc section: :spot_account_trade
@@ -821,7 +821,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.test_new_order("#{@docs_secret_key}", symbol: "BTCUSDT", side: "BUY", type: "LIMIT", quantity: 1, price: 100)
       iex> response.status
-      401
+      400
   """
   @type test_new_order_option ::
           {:symbol, String.t()}
@@ -874,7 +874,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.new_order("#{@docs_secret_key}", symbol: "BTCUSDT", side: "BUY", type: "LIMIT", quantity: 1, price: 100)
       iex> response.status
-      401
+      400
   """
   @type new_order_option ::
           {:symbol, String.t()}
@@ -930,7 +930,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.batch_orders("#{@docs_secret_key}", batchOrders: [%{symbol: "BTCUSDT", side: "BUY", type: "LIMIT", quantity: 1, price: 100}])
       iex> response.status
-      401
+      400
   """
   @type batch_orders_option ::
           {:batchOrders, list()}
@@ -982,7 +982,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.cancel_order("#{@docs_secret_key}", symbol: "BTCUSDT", orderId: 1)
       iex> response.status
-      401
+      400
   """
   @type cancel_order_option ::
           {:symbol, String.t()}
@@ -1025,7 +1025,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.cancel_all_open_orders("#{@docs_secret_key}", symbol: "BTCUSDT")
       iex> response.status
-      401
+      400
   """
   @type cancel_all_open_orders_option ::
           {:symbol, String.t()}
@@ -1068,7 +1068,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.query_order("#{@docs_secret_key}", symbol: "BTCUSDT", orderId: 1)
       iex> response.status
-      401
+      400
   """
   @type query_order_option ::
           {:symbol, String.t()}
@@ -1110,7 +1110,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.open_orders("#{@docs_secret_key}", symbol: "BTCUSDT")
       iex> response.status
-      401
+      400
   """
   @type open_orders_option ::
           {:symbol, String.t()}
@@ -1153,7 +1153,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.all_orders("#{@docs_secret_key}", symbol: "BTCUSDT")
       iex> response.status
-      401
+      400
   """
   @type all_orders_option ::
           {:symbol, String.t()}
@@ -1195,7 +1195,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.account("#{@docs_secret_key}")
       iex> response.status
-      401
+      400
   """
   @type account_option ::
           {:recvWindow, integer()}
@@ -1238,7 +1238,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.account_trades("#{@docs_secret_key}", symbol: "BTCUSDT")
       iex> response.status
-      401
+      400
   """
   @type account_trades_option ::
           {:symbol, String.t()}
@@ -1282,7 +1282,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.enable_mx_deduct("#{@docs_secret_key}", mxDeductEnable: true)
       iex> response.status
-      401
+      400
   """
   @type enable_mx_deduct_option ::
           {:mxDeductEnable, boolean()}
@@ -1321,7 +1321,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.mx_deduct_status("#{@docs_secret_key}")
       iex> response.status
-      401
+      400
   """
   @type mx_deduct_status_option ::
           {:recvWindow, integer()}
@@ -1360,7 +1360,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> alias Emxc.Global.Spot.V3, as: Spot
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}") |> Spot.currency_details("#{@docs_secret_key}")
       iex> response.status
-      401
+      400
   """
   @type currency_details_option ::
           {:recvWindow, integer()}
@@ -1406,7 +1406,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.create_withdrawal("#{@docs_secret_key}", coin: "BTC", withdrawOrderId: "123456", network: "BTC", address: "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2", memo: "123", amount: 0.0001, remark: "123")
       iex> response.status
-      401
+      400
   """
   @type create_withdrawal_option ::
           {:coin, String.t()}
@@ -1453,7 +1453,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.cancel_withdrawal("#{@docs_secret_key}", id: "123456")
       iex> response.status
-      401
+      400
   """
   @type cancel_withdrawal_option ::
           {:id, String.t()}
@@ -1495,7 +1495,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.deposit_history("#{@docs_secret_key}")
       iex> response.status
-      401
+      400
   """
   @type deposit_history_option ::
           {:coin, String.t()}
@@ -1541,7 +1541,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.withdrawal_history("#{@docs_secret_key}")
       iex> response.status
-      401
+      400
   """
   @type withdrawal_history_option ::
           {:coin, String.t()}
@@ -1584,7 +1584,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.generate_deposit_address("#{@docs_secret_key}", coin: "BTC", network: "BTC")
       iex> response.status
-      401
+      400
   """
   @type generate_deposit_address_option ::
           {:coin, String.t()}
@@ -1628,7 +1628,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.get_deposit_address("#{@docs_secret_key}", coin: "BTC", network: "BTC")
       iex> response.status
-      401
+      400
   """
   @type get_deposit_address_option ::
           {:coin, String.t()}
@@ -1669,7 +1669,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.get_withdrawal_address("#{@docs_secret_key}", coin: "BTC")
       iex> response.status
-      401
+      400
   """
   @type get_withdrawal_address_option ::
           {:coin, String.t()}
@@ -1714,7 +1714,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.create_universal_transfer("#{@docs_secret_key}", fromAccountType: "SPOT", toAccountType: "FUTURES", asset: "BTC", amount: 0.1)
       iex> response.status
-      401
+      400
   """
   @type create_universal_transfer_option ::
           {:fromAccountType, String.t()}
@@ -1766,7 +1766,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.get_universal_transfer_history("#{@docs_secret_key}", fromAccountType: "SPOT", toAccountType: "FUTURES")
       iex> response.status
-      401
+      400
   """
   @type get_universal_transfer_history_option ::
           {:fromAccountType, String.t()}
@@ -1812,7 +1812,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.get_universal_transfer("#{@docs_secret_key}", tranId: "123456")
       iex> response.status
-      401
+      400
   """
   @type get_universal_transfer_option ::
           {:tranId, integer()}
@@ -1846,7 +1846,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.get_convertible_assets("#{@docs_secret_key}")
       iex> response.status
-      401
+      400
   """
   @spec get_convertible_assets(client(), String.t()) :: response()
   @doc section: :wallet
@@ -1881,7 +1881,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.create_dust_transfer("#{@docs_secret_key}", asset: "BTC,FIL,ETH")
       iex> response.status
-      401
+      400
   """
   @type create_dust_transfer_option ::
           {:asset, String.t()}
@@ -1925,7 +1925,7 @@ defmodule Emxc.Global.Spot.V3 do
       iex> {:ok, response} = Spot.authorized_client(api_key: "#{@docs_api_key}")
       ...> |> Spot.get_dust_transfer_log("#{@docs_secret_key}")
       iex> response.status
-      401
+      400
   """
   @type get_dust_transfer_log_option ::
           {:startTime, integer()}
