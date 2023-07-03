@@ -1,5 +1,6 @@
 defmodule Emxc.Global.Futures.V1 do
-  import Emxc.Utilities, only: [unwrap_response: 1, timestamp: 0, sign_get_query: 2]
+  import Emxc.Utilities, only: [unwrap_response: 1]
+  require Logger
 
   @base_url "https://contract.mexc.com"
   @docs_api_key Emxc.Utilities.docs_api_key()
@@ -25,6 +26,7 @@ defmodule Emxc.Global.Futures.V1 do
                 {Tesla.Middleware.BaseUrl, :call,
                  ["https://contract.mexc.com"]},
                 {Tesla.Middleware.JSON, :call, [[]]},
+                {Tesla.Middleware.KeepRequest, :call, [[]]},
                 {Tesla.Middleware.Headers, :call,
                  [[{"Content-Type", "application/json"}]]}
               ],
@@ -44,6 +46,7 @@ defmodule Emxc.Global.Futures.V1 do
     middleware = [
       {Tesla.Middleware.BaseUrl, base_url},
       Tesla.Middleware.JSON,
+      Tesla.Middleware.KeepRequest,
       {Tesla.Middleware.Headers, [{"Content-Type", "application/json"} | custom_headers]}
     ]
 
@@ -67,6 +70,7 @@ defmodule Emxc.Global.Futures.V1 do
                 {Tesla.Middleware.BaseUrl, :call,
                  ["https://contract.mexc.com"]},
                 {Tesla.Middleware.JSON, :call, [[]]},
+                {Tesla.Middleware.KeepRequest, :call, [[]]},
                 {Tesla.Middleware.Headers, :call,
                  [
                    [
@@ -95,6 +99,7 @@ defmodule Emxc.Global.Futures.V1 do
     middleware = [
       {Tesla.Middleware.BaseUrl, base_url},
       Tesla.Middleware.JSON,
+      Tesla.Middleware.KeepRequest,
       {Tesla.Middleware.Headers,
        [{"ApiKey", api_key}, {"Content-Type", "application/json"} | custom_headers]}
     ]
@@ -467,7 +472,8 @@ defmodule Emxc.Global.Futures.V1 do
           {:symbol, String.t()}
           | {:page_num, integer()}
           | {:page_size, integer()}
-  @spec get_risk_reserve_amount_history(client(), [get_risk_reserve_amount_history_option()]) :: response()
+  @spec get_risk_reserve_amount_history(client(), [get_risk_reserve_amount_history_option()]) ::
+          response()
   @doc section: :market_data
   def get_risk_reserve_amount_history(client, opts \\ []) do
     symbol = Keyword.get(opts, :symbol, nil)
@@ -511,5 +517,190 @@ defmodule Emxc.Global.Futures.V1 do
       query: [symbol: symbol, page_num: page_num, page_size: page_size]
     )
     |> unwrap_response()
+  end
+
+  # Account and trading endpoints
+
+  @doc """
+  Get all information of user's asset.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_account("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @spec get_account(client(), String.t()) :: response()
+  @doc section: :account_and_trading
+  def get_account(client, secret_key) do
+    client
+    |> Tesla.get("api/v1/private/account/assets",
+      headers: get_request_signature(client, secret_key)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get the user's single currency asset information.
+
+  ## Options
+    * `:currency` - The currency to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_currency_account("#{@docs_secret_key}", currency: "USDT")
+      iex> response.result["code"]
+      1005
+  """
+  @type get_currency_account_option ::
+          {:currency, String.t()}
+  @spec get_currency_account(client(), String.t(), [get_currency_account_option()]) :: response()
+  @doc section: :account_and_trading
+  def get_currency_account(client, secret_key, opts \\ []) do
+    currency = Keyword.get(opts, :currency, nil)
+
+    client
+    |> Tesla.get("api/v1/private/account/asset/#{currency}",
+      headers: get_request_signature(client, secret_key)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get the user's asset transfer records.
+
+  ## Options
+    * `:currency` - The currency to get the information for. Optional.
+    * `:state` - The state to get the information for. Optional.
+    * `:type` - The type to get the information for. Optional.
+    * `:page_num` - The page number to get the information for. Optional.
+    * `:page_size` - The page size to get the information for. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_asset_transfer_records("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type get_asset_transfer_records_option ::
+          {:currency, String.t()}
+          | {:state, String.t()}
+          | {:type, String.t()}
+          | {:page_num, integer()}
+          | {:page_size, integer()}
+  @spec get_asset_transfer_records(client(), String.t(), [get_asset_transfer_records_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def get_asset_transfer_records(client, secret_key, opts \\ []) do
+    currency = Keyword.get(opts, :currency, nil)
+    state = Keyword.get(opts, :state, nil)
+    type = Keyword.get(opts, :type, nil)
+    page_num = Keyword.get(opts, :page_num, 1)
+    page_size = Keyword.get(opts, :page_size, 100)
+
+    query = [
+      currency: currency,
+      state: state,
+      type: type,
+      page_num: page_num,
+      page_size: page_size
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/account/transfer_record",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get the user's history position information.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Optional.
+    * `:type` - The type to get the information for. Optional.
+    * `:page_num` - The page number to get the information for. Optional.
+    * `:page_size` - The page size to get the information for. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_position_history("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type get_position_history_option ::
+          {:symbol, String.t()}
+          | {:type, String.t()}
+          | {:page_num, integer()}
+          | {:page_size, integer()}
+  @spec get_position_history(client(), String.t(), [get_position_history_option()]) :: response()
+  @doc section: :account_and_trading
+  def get_position_history(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, nil)
+    type = Keyword.get(opts, :type, nil)
+    page_num = Keyword.get(opts, :page_num, 1)
+    page_size = Keyword.get(opts, :page_size, 100)
+
+    query = [
+      symbol: symbol,
+      type: type,
+      page_num: page_num,
+      page_size: page_size
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/position/list/history_positions",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @spec get_request_signature(client(), String.t(), keyword()) :: headers()
+  defp get_request_signature(client, secret_key, query \\ []) do
+    api_key = get_api_key(client)
+    timestamp = timestamp()
+
+    parameters =
+      if Enum.empty?(query) do
+        ""
+      else
+        query
+        |> URI.encode_query()
+      end
+
+    signature = sign_sha256(secret_key, parameters <> api_key <> timestamp)
+    [{"Request-Time", "#{timestamp}"}, {"Signature", "#{signature}"}]
+  end
+
+  @spec post_request_signature(client(), String.t(), map()) :: headers()
+  defp post_request_signature(client, secret_key, payload) do
+    api_key = get_api_key(client)
+    timestamp = timestamp()
+
+    signature = sign_sha256(secret_key, (payload |> Jason.encode!()) <> api_key <> timestamp)
+    [{"Request-Time", "#{timestamp}"}, {"Signature", "#{signature}"}]
+  end
+
+  @spec sign_sha256(String.t(), String.t()) :: String.t()
+  defp sign_sha256(key, content) do
+    :crypto.mac(:hmac, :sha256, key, content)
+    |> Base.encode16(case: :lower)
+  end
+
+  defp timestamp do
+    DateTime.utc_now()
+    |> DateTime.to_unix(:millisecond)
+    |> Integer.to_string()
+  end
+
+  defp get_api_key(%Tesla.Client{pre: pre}) do
+    pre
+    |> Enum.find(fn {x, _, _} -> x == Tesla.Middleware.Headers end)
+    |> elem(2)
+    |> List.flatten()
+    |> Enum.find(fn {x, _} -> x == "ApiKey" end)
+    |> elem(1)
   end
 end

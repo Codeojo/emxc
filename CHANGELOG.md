@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. Version not
 * Fix failing doctests
 * Fix Spot authenticated client typespecs
 * Add all Futures endpoints
+* Split up tests into separate files
 
 ## v0.0.5
 * Added all remaining Global Spot V3 endpoints
