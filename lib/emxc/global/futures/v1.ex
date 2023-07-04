@@ -657,6 +657,291 @@ defmodule Emxc.Global.Futures.V1 do
     |> unwrap_response()
   end
 
+  @doc """
+  Get the user's current holding position.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_position("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type get_position_option ::
+          {:symbol, String.t()}
+  @spec get_position(client(), String.t(), [get_position_option()]) :: response()
+  @doc section: :account_and_trading
+  def get_position(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, nil)
+
+    query = [
+      symbol: symbol
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/position/open_positions",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get details of user's funding rate.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Optional.
+    * `:position_id` - The position id to get the information for. Optional.
+    * `:page_num` - The page number to get the information for. Optional.
+    * `:page_size` - The page size to get the information for. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_user_funding_rate("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type get_user_funding_rate_option ::
+          {:symbol, String.t()}
+          | {:position_id, String.t()}
+          | {:page_num, integer()}
+          | {:page_size, integer()}
+  @spec get_user_funding_rate(client(), String.t(), [get_user_funding_rate_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def get_user_funding_rate(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, nil)
+    position_id = Keyword.get(opts, :position_id, nil)
+    page_num = Keyword.get(opts, :page_num, 1)
+    page_size = Keyword.get(opts, :page_size, 100)
+
+    query = [
+      symbol: symbol,
+      position_id: position_id,
+      page_num: page_num,
+      page_size: page_size
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/position/funding_records",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get the user's current pending order.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Optional.
+    * `:page_num` - The page number to get the information for. Required.
+    * `:page_size` - The page size to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_pending_order("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type get_pending_order_option ::
+          {:symbol, String.t()}
+          | {:page_num, integer()}
+          | {:page_size, integer()}
+  @spec get_pending_order(client(), String.t(), [get_pending_order_option()]) :: response()
+  @doc section: :account_and_trading
+  def get_pending_order(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, nil)
+    page_num = Keyword.get(opts, :page_num, nil)
+    page_size = Keyword.get(opts, :page_size, nil)
+
+    query = [
+      page_num: page_num,
+      page_size: page_size
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/order/list/open_orders/#{symbol}",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get all of the user's historical orders.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Optional.
+    * `:states` - The states to get the information for. Optional.
+    * `:category` - The category to get the information for. Optional.
+    * `:start_time` - The start time to get the information for. Optional.
+    * `:end_time` - The end time to get the information for. Optional.
+    * `:side` - The side to get the information for. Optional.
+    * `:page_num` - The page number to get the information for. Required.
+    * `:page_size` - The page size to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_historical_orders("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type get_historical_orders_option ::
+          {:symbol, String.t()}
+          | {:states, String.t()}
+          | {:category, String.t()}
+          | {:start_time, String.t()}
+          | {:end_time, String.t()}
+          | {:side, String.t()}
+          | {:page_num, integer()}
+          | {:page_size, integer()}
+  @spec get_historical_orders(client(), String.t(), [get_historical_orders_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def get_historical_orders(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, nil)
+    states = Keyword.get(opts, :states, nil)
+    category = Keyword.get(opts, :category, nil)
+    start_time = Keyword.get(opts, :start_time, nil)
+    end_time = Keyword.get(opts, :end_time, nil)
+    side = Keyword.get(opts, :side, nil)
+    page_num = Keyword.get(opts, :page_num, 1)
+    page_size = Keyword.get(opts, :page_size, 100)
+
+    query = [
+      symbol: symbol,
+      states: states,
+      category: category,
+      start_time: start_time,
+      end_time: end_time,
+      side: side,
+      page_num: page_num,
+      page_size: page_size
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/order/list/history_orders",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Query the order based on the external number.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Required.
+    * `:external_oid` - The order id to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.query_external_order("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type query_external_order_option ::
+          {:symbol, String.t()}
+          | {:external_oid, String.t()}
+  @spec query_external_order(client(), String.t(), [query_external_order_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def query_external_order(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTC_USDT")
+    external_oid = Keyword.get(opts, :external_oid, "1234567890")
+
+    client
+    |> Tesla.get("api/v1/private/order/external/#{symbol}/#{external_oid}",
+      headers: get_request_signature(client, secret_key)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Query the order based on the order number.
+
+  ## Options
+    * `:order_id` - The order id to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.query_order("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type query_order_option ::
+          {:order_id, String.t()}
+  @spec query_order(client(), String.t(), [query_order_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def query_order(client, secret_key, opts \\ []) do
+    order_id = Keyword.get(opts, :order_id, "1234567890")
+
+    client
+    |> Tesla.get("api/v1/private/order/get/#{order_id}",
+      headers: get_request_signature(client, secret_key)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Query the order in bulk based on the order numbers.
+
+  ## Options
+    * `:order_ids` - The order ids to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.query_orders("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type query_orders_option ::
+          {:order_ids, String.t()}
+  @spec query_orders(client(), String.t(), [query_orders_option()]) :: response()
+  @doc section: :account_and_trading
+  def query_orders(client, secret_key, opts \\ []) do
+    order_ids = Keyword.get(opts, :order_ids, "1,2,3")
+    query = [order_ids: order_ids]
+
+    client
+    |> Tesla.get("api/v1/private/order/batch_query",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get order transaction details based on the order ID.
+
+  ## Options
+    * `:order_id` - The order id to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.query_order_trades("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type query_order_trades_option ::
+          {:order_id, String.t()}
+  @spec query_order_trades(client(), String.t(), [query_order_trades_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def query_order_trades(client, secret_key, opts \\ []) do
+    order_id = Keyword.get(opts, :order_id, "1234567890")
+
+    client
+    |> Tesla.get("api/v1/private/order/deal_details/#{order_id}",
+      headers: get_request_signature(client, secret_key)
+    )
+    |> unwrap_response()
+  end
+
   @spec get_request_signature(client(), String.t(), keyword()) :: headers()
   defp get_request_signature(client, secret_key, query \\ []) do
     api_key = get_api_key(client)
