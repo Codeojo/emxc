@@ -942,6 +942,881 @@ defmodule Emxc.Global.Futures.V1 do
     |> unwrap_response()
   end
 
+  @doc """
+  Get all transaction details of the user's order.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Required.
+    * `:start_time` - The start time to get the information for. Optional.
+    * `:end_time` - The end time to get the information for. Optional.
+    * `:page_index` - The page index to get the information for. Required.
+    * `:page_size` - The page size to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.query_all_order_trades("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type query_all_order_trades_option ::
+          {:symbol, String.t()}
+          | {:start_time, String.t()}
+          | {:end_time, String.t()}
+          | {:page_index, String.t()}
+          | {:page_size, String.t()}
+  @spec query_all_order_trades(client(), String.t(), [query_all_order_trades_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def query_all_order_trades(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+    start_time = Keyword.get(opts, :start_time, "1234567890")
+    end_time = Keyword.get(opts, :end_time, "1234567890")
+    page_index = Keyword.get(opts, :page_index, "1")
+    page_size = Keyword.get(opts, :page_size, "10")
+
+    query = [
+      symbol: symbol,
+      start_time: start_time,
+      end_time: end_time,
+      page_index: page_index,
+      page_size: page_size
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/order/list/order_deals",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Gets the trigger order list.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Optional.
+    * `:states` - The states to get the information for. Optional.
+    * `:start_time` - The start time to get the information for. Optional.
+    * `:end_time` - The end time to get the information for. Optional.
+    * `:page_index` - The page index to get the information for. Required.
+    * `:page_size` - The page size to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.query_trigger_order_list("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type query_trigger_order_list_option ::
+          {:symbol, String.t()}
+          | {:states, String.t()}
+          | {:start_time, String.t()}
+          | {:end_time, String.t()}
+          | {:page_index, String.t()}
+          | {:page_size, String.t()}
+  @spec query_trigger_order_list(client(), String.t(), [query_trigger_order_list_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def query_trigger_order_list(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+    states = Keyword.get(opts, :states, "1")
+    start_time = Keyword.get(opts, :start_time, "1234567890")
+    end_time = Keyword.get(opts, :end_time, "1234567890")
+    page_index = Keyword.get(opts, :page_index, "1")
+    page_size = Keyword.get(opts, :page_size, "10")
+
+    query = [
+      symbol: symbol,
+      states: states,
+      start_time: start_time,
+      end_time: end_time,
+      page_index: page_index,
+      page_size: page_size
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/planorder/list/orders",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get the stop-limit order list.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Optional.
+    * `:is_finished` - The is_finished to get the information for. Optional.
+    * `:start_time` - The start time to get the information for. Optional.
+    * `:end_time` - The end time to get the information for. Optional.
+    * `:page_index` - The page index to get the information for. Required.
+    * `:page_size` - The page size to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.query_stop_limit_order_list("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type query_stop_limit_order_list_option ::
+          {:symbol, String.t()}
+          | {:is_finished, String.t()}
+          | {:start_time, String.t()}
+          | {:end_time, String.t()}
+          | {:page_index, String.t()}
+          | {:page_size, String.t()}
+  @spec query_stop_limit_order_list(client(), String.t(), [query_stop_limit_order_list_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def query_stop_limit_order_list(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+    is_finished = Keyword.get(opts, :is_finished, "1")
+    start_time = Keyword.get(opts, :start_time, "1234567890")
+    end_time = Keyword.get(opts, :end_time, "1234567890")
+    page_index = Keyword.get(opts, :page_index, "1")
+    page_size = Keyword.get(opts, :page_size, "10")
+
+    query = [
+      symbol: symbol,
+      is_finished: is_finished,
+      start_time: start_time,
+      end_time: end_time,
+      page_index: page_index,
+      page_size: page_size
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/stoporder/list/orders",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get risk limits.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.query_risk_limit("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type query_risk_limit_option ::
+          {:symbol, String.t()}
+  @spec query_risk_limit(client(), String.t(), [query_risk_limit_option()]) :: response()
+  @doc section: :account_and_trading
+  def query_risk_limit(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, nil)
+
+    query = [
+      symbol: symbol
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/account/risk_limit",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get's the user's current trading fee rate.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.query_fee_rate("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type query_fee_rate_option ::
+          {:symbol, String.t()}
+  @spec query_fee_rate(client(), String.t(), [query_fee_rate_option()]) :: response()
+  @doc section: :account_and_trading
+  def query_fee_rate(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+
+    query = [
+      symbol: symbol
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/account/tiered_fee_rate",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Increase or decrease margin.
+
+  ## Options
+    * `:positionId` - The positionId to get the information for. Required.
+    * `:amount` - The amount to get the information for. Required.
+    * `:type` - The type to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.change_margin("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type change_margin_option ::
+          {:positionId, String.t()}
+          | {:amount, String.t()}
+          | {:type, String.t()}
+  @spec change_margin(client(), String.t(), [change_margin_option()]) :: response()
+  @doc section: :account_and_trading
+  def change_margin(client, secret_key, opts \\ []) do
+    positionId = Keyword.get(opts, :positionId, "1234567890")
+    amount = Keyword.get(opts, :amount, "1")
+    type = Keyword.get(opts, :type, "1")
+
+    query = [
+      positionId: positionId,
+      amount: amount,
+      type: type
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/position/change_margin",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get leverage.
+
+  ## Options
+    * `:symbol` - The symbol to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_leverage("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type get_leverage_option ::
+          {:symbol, String.t()}
+  @spec get_leverage(client(), String.t(), [get_leverage_option()]) :: response()
+  @doc section: :account_and_trading
+  def get_leverage(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+
+    query = [
+      symbol: symbol
+    ]
+
+    client
+    |> Tesla.get("api/v1/private/position/leverage",
+      query: query,
+      headers: get_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Switch leverage.
+
+  ## Options
+    * `:positionId` - The symbol to get the information for. Required.
+    * `:leverage` - The leverage to get the information for. Required.
+    * `:openType` - The openType to get the information for. Optional.
+    * `:symbol` - The symbol to get the information for. Optional.
+    * `:positionType` - The positionType to get the information for. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.switch_leverage("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @type switch_leverage_option ::
+          {:positionId, String.t()}
+          | {:leverage, String.t()}
+          | {:openType, String.t()}
+          | {:symbol, String.t()}
+          | {:positionType, String.t()}
+  @spec switch_leverage(client(), String.t(), [switch_leverage_option()]) :: response()
+  @doc section: :account_and_trading
+  def switch_leverage(client, secret_key, opts \\ []) do
+    positionId = Keyword.get(opts, :positionId, "1234567890")
+    leverage = Keyword.get(opts, :leverage, "1")
+    openType = Keyword.get(opts, :openType, "1")
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+    positionType = Keyword.get(opts, :positionType, "1")
+
+    query = [
+      positionId: positionId,
+      leverage: leverage,
+      openType: openType,
+      symbol: symbol,
+      positionType: positionType
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/position/change_leverage",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Get position mode.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.get_position_mode("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @spec get_position_mode(client(), String.t()) :: response()
+  @doc section: :account_and_trading
+  def get_position_mode(client, secret_key) do
+    client
+    |> Tesla.get("api/v1/private/position/position_mode",
+      headers: get_request_signature(client, secret_key)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Change position mode.
+
+  ## Options
+    * `:positionMode` - The position mode to get the information for. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.change_position_mode("#{@docs_secret_key}", positionMode: 1)
+      iex> response.result["code"]
+  """
+  @type change_position_mode_option ::
+          {:positionMode, integer()}
+  @spec change_position_mode(client(), String.t(), [change_position_mode_option()]) :: response()
+  @doc section: :account_and_trading
+  def change_position_mode(client, secret_key, opts \\ []) do
+    positionMode = Keyword.get(opts, :positionMode, 1)
+
+    query = [
+      positionMode: positionMode
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/position/change_position_mode",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Create an order.
+
+  ## Options
+    * `:symbol` - The symbol to buy or sell. Required.
+    * `:price` - The price to buy or sell at. Required.
+    * `:vol` - The volume to buy or sell. Required.
+    * `:leverage` - The leverage to buy or sell. Optional.
+    * `:side` - The side of the order. Required.
+    * `:type` - The type of the order. Required.
+    * `:openType` - The open type of the order. Required.
+    * `:positionId` - The position id of the order. Optional.
+    * `:externalOid` - The external order ID of the order. Optional.
+    * `:stopLossPrice` - The stop loss price of the order. Optional.
+    * `:takeProfitPrice` - The take profit price of the order. Optional.
+    * `:positionType` - The position type of the order. Optional.
+    * `:reduceOnly` - The reduce only of the order. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.create_order("#{@docs_secret_key}", symbol: "BTCUSDT", price: "10000", vol: "1", side: "1", type: "1", openType: "1")
+      iex> response.result["code"]
+      1005
+  """
+  @type create_order_option ::
+          {:symbol, String.t()}
+          | {:price, String.t()}
+          | {:vol, String.t()}
+          | {:leverage, String.t()}
+          | {:side, String.t()}
+          | {:type, String.t()}
+          | {:openType, String.t()}
+          | {:positionId, String.t()}
+          | {:externalOid, String.t()}
+          | {:stopLossPrice, String.t()}
+          | {:takeProfitPrice, String.t()}
+          | {:positionType, String.t()}
+          | {:reduceOnly, String.t()}
+  @spec create_order(client(), String.t(), [create_order_option()]) :: response()
+  @doc section: :account_and_trading
+  def create_order(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+    price = Keyword.get(opts, :price, "10000")
+    vol = Keyword.get(opts, :vol, "1")
+    leverage = Keyword.get(opts, :leverage, "1")
+    side = Keyword.get(opts, :side, "1")
+    type = Keyword.get(opts, :type, "1")
+    openType = Keyword.get(opts, :openType, "1")
+    positionId = Keyword.get(opts, :positionId, "1234567890")
+    externalOid = Keyword.get(opts, :externalOid, "1234567890")
+    stopLossPrice = Keyword.get(opts, :stopLossPrice, "10000")
+    takeProfitPrice = Keyword.get(opts, :takeProfitPrice, "10000")
+    positionType = Keyword.get(opts, :positionType, "1")
+    reduceOnly = Keyword.get(opts, :reduceOnly, "1")
+
+    query = [
+      symbol: symbol,
+      price: price,
+      vol: vol,
+      leverage: leverage,
+      side: side,
+      type: type,
+      openType: openType,
+      positionId: positionId,
+      externalOid: externalOid,
+      stopLossPrice: stopLossPrice,
+      takeProfitPrice: takeProfitPrice,
+      positionType: positionType,
+      reduceOnly: reduceOnly
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/order/submit",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Create bulk orders.
+
+  ## Options
+    * `:orders` - The orders to create. Required. See `create_order/3` for the options.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.create_orders("#{@docs_secret_key}", orders: [[symbol: "BTCUSDT", price: "10000", vol: "1", side: "1", type: "1", openType: "1"]])
+      iex> response.result["code"]
+      1005
+  """
+  @type create_orders_option :: {:orders, [create_order_option()]}
+  @spec create_orders(client(), String.t(), [create_orders_option()]) :: response()
+  @doc section: :account_and_trading
+  def create_orders(client, secret_key, opts \\ []) do
+    orders = Keyword.get(opts, :orders, [])
+
+    payload = orders |> Enum.map(&Enum.into(&1, %{}))
+
+    client
+    |> Tesla.post(
+      "api/v1/private/order/submit_batch",
+      payload,
+      headers: post_request_signature(client, secret_key, payload, false)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Cancel the order.
+
+  ## Options
+    * `:orders` - The list of orders ID's to cancel.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.cancel_order("#{@docs_secret_key}", orders: "1234567890")
+      iex> response.result["code"]
+      1005
+  """
+  @type cancel_order_option :: {:orders, String.t()}
+  @spec cancel_order(client(), String.t(), [cancel_order_option()]) :: response()
+  @doc section: :account_and_trading
+  def cancel_order(client, secret_key, opts \\ []) do
+    orders = Keyword.get(opts, :orders, "1234567890")
+
+    query = [orders: orders]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/order/cancel",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Cancel the order according to the external order ID.
+
+  ## Options
+    * `:symbol` - The symbol of the order to cancel. Required.
+    * `:externalOid` - The external order ID to cancel. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.cancel_order_by_external_oid("#{@docs_secret_key}", symbol: "BTCUSDT", externalOid: "1234567890")
+      iex> response.result["code"]
+      1005
+  """
+  @type cancel_order_by_external_oid_option :: {:symbol, String.t()} | {:externalOid, String.t()}
+  @spec cancel_order_by_external_oid(client(), String.t(), [cancel_order_by_external_oid_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def cancel_order_by_external_oid(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+    externalOid = Keyword.get(opts, :externalOid, "1234567890")
+
+    query = [symbol: symbol, externalOid: externalOid]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/order/cancel_with_external",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Cancel all orders under a contract.
+
+  ## Options
+    * `:symbol` - The symbol of the order to cancel. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.cancel_all_orders("#{@docs_secret_key}", symbol: "BTCUSDT")
+      iex> response.result["code"]
+      1005
+  """
+  @type cancel_all_orders_option :: {:symbol, String.t()}
+  @spec cancel_all_orders(client(), String.t(), [cancel_all_orders_option()]) :: response()
+  @doc section: :account_and_trading
+  def cancel_all_orders(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+
+    query = [symbol: symbol]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/order/cancel_all",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Switch the risk level (deprecated).
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.switch_risk_level("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @spec switch_risk_level(client(), String.t()) :: response()
+  @doc section: :account_and_trading
+  def switch_risk_level(client, secret_key) do
+    client
+    |> Tesla.post(
+      "api/v1/private/account/change_risk_level",
+      %{},
+      headers: get_request_signature(client, secret_key)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Create a trigger order.
+
+  ## Options
+    * `:symbol` - The symbol of the order to create. Required.
+    * `:price` - The price of the order to create. Optional.
+    * `:vol` - The volume of the order to create. Required.
+    * `:leverage` - The leverage of the order to create. Optional.
+    * `:side` - The side of the order to create. Required.
+    * `:openType` - The open type of the order to create. Required.
+    * `:triggerPrice` - The trigger price of the order to create. Required.
+    * `:triggerType` - The trigger type of the order to create. Required.
+    * `:executeCycle` - The execute cycle of the order to create. Required.
+    * `:orderType` - The order type of the order to create. Required.
+    * `:trend` - The trend of the order to create. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.create_trigger_order("#{@docs_secret_key}", symbol: "BTCUSDT", price: 10000, vol: 1, leverage: 10, side: "BUY", openType: "LIMIT", triggerPrice: 10000, triggerType: "LAST", executeCycle: "GTC", orderType: "LIMIT", trend: "UP")
+      iex> response.result["code"]
+      1005
+  """
+  @type create_trigger_order_option ::
+          {:symbol, String.t()}
+          | {:price, number()}
+          | {:vol, number()}
+          | {:leverage, number()}
+          | {:side, String.t()}
+          | {:openType, String.t()}
+          | {:triggerPrice, number()}
+          | {:triggerType, String.t()}
+          | {:executeCycle, String.t()}
+          | {:orderType, String.t()}
+          | {:trend, String.t()}
+  @spec create_trigger_order(client(), String.t(), [create_trigger_order_option()]) :: response()
+  @doc section: :account_and_trading
+  def create_trigger_order(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+    price = Keyword.get(opts, :price, 10000)
+    vol = Keyword.get(opts, :vol, 1)
+    leverage = Keyword.get(opts, :leverage, 10)
+    side = Keyword.get(opts, :side, "BUY")
+    openType = Keyword.get(opts, :openType, "LIMIT")
+    triggerPrice = Keyword.get(opts, :triggerPrice, 10000)
+    triggerType = Keyword.get(opts, :triggerType, "LAST")
+    executeCycle = Keyword.get(opts, :executeCycle, "GTC")
+    orderType = Keyword.get(opts, :orderType, "LIMIT")
+    trend = Keyword.get(opts, :trend, "UP")
+
+    query = [
+      symbol: symbol,
+      price: price,
+      vol: vol,
+      leverage: leverage,
+      side: side,
+      openType: openType,
+      triggerPrice: triggerPrice,
+      triggerType: triggerType,
+      executeCycle: executeCycle,
+      orderType: orderType,
+      trend: trend
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/planorder/place",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Cancel the trigger order.
+
+  ## Options
+    * `:orders` - A list of cancel order request objects. Required.
+      * `:symbol` - The symbol of the order to cancel. Required.
+      * `:orderId` - The order ID of the order to cancel. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.cancel_trigger_order("#{@docs_secret_key}", orders: [%{symbol: "BTCUSDT", orderId: 1}])
+      iex> response.result["code"]
+      1005
+  """
+  @type cancel_trigger_order_option :: {:orders, [map()]}
+  @spec cancel_trigger_order(client(), String.t(), [cancel_trigger_order_option()]) :: response()
+  @doc section: :account_and_trading
+  def cancel_trigger_order(client, secret_key, opts \\ []) do
+    orders = Keyword.get(opts, :orders, [%{symbol: "BTCUSDT", orderId: 1}])
+
+    query = [
+      orders: orders
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/planorder/cancel",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Cancel all trigger orders.
+
+  ## Options
+    * `:symbol` - The symbol of the order to cancel. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.cancel_all_trigger_orders("#{@docs_secret_key}", symbol: "BTCUSDT")
+      iex> response.result["code"]
+      1005
+  """
+  @type cancel_all_trigger_orders_option :: {:symbol, String.t()}
+  @spec cancel_all_trigger_orders(client(), String.t(), [cancel_all_trigger_orders_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def cancel_all_trigger_orders(client, secret_key, opts \\ []) do
+    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
+
+    query = [
+      symbol: symbol
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/planorder/cancel_all",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Cancel the stop-limit trigger order.
+
+  ## Options
+    * `:orders` - The list of cancel order request objects. Required.
+      * `:stopPlanOrderId` - The stop-limit trigger order ID. Required.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.cancel_stop_limit_trigger_order("#{@docs_secret_key}", orders: [%{stopPlanOrderId: 1}])
+      iex> response.result["code"]
+      1005
+  """
+  @type cancel_stop_limit_trigger_order_option :: {:orders, [map()]}
+  @spec cancel_stop_limit_trigger_order(client(), String.t(), [
+          cancel_stop_limit_trigger_order_option()
+        ]) :: response()
+  @doc section: :account_and_trading
+  def cancel_stop_limit_trigger_order(client, secret_key, opts \\ []) do
+    orders = Keyword.get(opts, :orders, [%{stopPlanOrderId: 1}])
+
+    query = [
+      orders: orders
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/stoporder/cancel",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Cancel all stop-limit price trigger orders.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.cancel_all_stop_limit_trigger_orders("#{@docs_secret_key}")
+      iex> response.result["code"]
+      1005
+  """
+  @spec cancel_all_stop_limit_trigger_orders(client(), String.t()) :: response()
+  @doc section: :account_and_trading
+  def cancel_all_stop_limit_trigger_orders(client, secret_key) do
+    client
+    |> Tesla.post(
+      "api/v1/private/stoporder/cancel_all",
+      %{},
+      headers: get_request_signature(client, secret_key)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Switch Stop-Limit limited order price.
+
+  ## Options
+    * `:orderId` - The order ID. Required.
+    * `:stopLossPrice` - The stop-loss price. Optional.
+    * `:takeProfitPrice` - The take-profit price. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.switch_stop_limit_order_price("#{@docs_secret_key}", orderId: 1, stopLossPrice: 1, takeProfitPrice: 1)
+      iex> response.result["code"]
+      1005
+  """
+  @type switch_stop_limit_order_option ::
+          {:orderId, integer()} | {:stopLossPrice, float()} | {:takeProfitPrice, float()}
+  @spec switch_stop_limit_order_price(client(), String.t(), [switch_stop_limit_order_option()]) ::
+          response()
+  @doc section: :account_and_trading
+  def switch_stop_limit_order_price(client, secret_key, opts \\ []) do
+    order_id = Keyword.get(opts, :orderId, 1)
+    stop_loss_price = Keyword.get(opts, :stopLossPrice, 1)
+    take_profit_price = Keyword.get(opts, :takeProfitPrice, 1)
+
+    query = [
+      orderId: order_id,
+      stopLossPrice: stop_loss_price,
+      takeProfitPrice: take_profit_price
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/stoporder/change_price",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
+  @doc """
+  Switch the stop-limit price of trigger orders.
+
+  ## Options
+    * `:stopPlanOrderId` - The stop-limit trigger order ID. Required.
+    * `:stopLossPrice` - The stop-loss price. Optional.
+    * `:takeProfitPrice` - The take-profit price. Optional.
+
+  ## Example
+      iex> alias Emxc.Global.Futures.V1, as: Futures
+      iex> {:ok, response} = Futures.authorized_client(api_key: "#{@docs_api_key}") |> Futures.switch_stop_limit_trigger_order_price("#{@docs_secret_key}", stopPlanOrderId: 1, stopLossPrice: 1, takeProfitPrice: 1)
+      iex> response.result["code"]
+      1005
+  """
+  @type switch_stop_limit_trigger_order_option ::
+          {:stopPlanOrderId, integer()} | {:stopLossPrice, float()} | {:takeProfitPrice, float()}
+  @spec switch_stop_limit_trigger_order_price(client(), String.t(), [
+          switch_stop_limit_trigger_order_option()
+        ]) ::
+          response()
+  @doc section: :account_and_trading
+  def switch_stop_limit_trigger_order_price(client, secret_key, opts \\ []) do
+    stop_plan_order_id = Keyword.get(opts, :stopPlanOrderId, 1)
+    stop_loss_price = Keyword.get(opts, :stopLossPrice, 1)
+    take_profit_price = Keyword.get(opts, :takeProfitPrice, 1)
+
+    query = [
+      stopPlanOrderId: stop_plan_order_id,
+      stopLossPrice: stop_loss_price,
+      takeProfitPrice: take_profit_price
+    ]
+
+    client
+    |> Tesla.post(
+      "api/v1/private/stoporder/change_plan_price",
+      query |> Enum.into(%{}),
+      headers: post_request_signature(client, secret_key, query)
+    )
+    |> unwrap_response()
+  end
+
   @spec get_request_signature(client(), String.t(), keyword()) :: headers()
   defp get_request_signature(client, secret_key, query \\ []) do
     api_key = get_api_key(client)
@@ -959,12 +1834,19 @@ defmodule Emxc.Global.Futures.V1 do
     [{"Request-Time", "#{timestamp}"}, {"Signature", "#{signature}"}]
   end
 
-  @spec post_request_signature(client(), String.t(), map()) :: headers()
-  defp post_request_signature(client, secret_key, payload) do
+  @spec post_request_signature(client(), String.t(), keyword(), boolean()) :: headers()
+  defp post_request_signature(client, secret_key, payload, convert_to_map? \\ true) do
     api_key = get_api_key(client)
     timestamp = timestamp()
 
-    signature = sign_sha256(secret_key, (payload |> Jason.encode!()) <> api_key <> timestamp)
+    payload = if convert_to_map?, do: payload |> Enum.into(%{}), else: payload
+
+    signature =
+      sign_sha256(
+        secret_key,
+        (payload |> Jason.encode!()) <> api_key <> timestamp
+      )
+
     [{"Request-Time", "#{timestamp}"}, {"Signature", "#{signature}"}]
   end
 
