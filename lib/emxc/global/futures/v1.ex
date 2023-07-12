@@ -1399,12 +1399,19 @@ defmodule Emxc.Global.Futures.V1 do
       |> Stream.filter(fn {_, v} -> v != nil end)
       |> Enum.into(%{})
 
-    client
-    |> Tesla.post(
-      "api/v1/private/order/submit",
-      query,
-      headers: post_request_signature(client, secret_key, query, false)
-    )
+    Logger.info("Order query: #{inspect(query, pretty: true)}")
+
+    response =
+      client
+      |> Tesla.post(
+        "api/v1/private/order/submit",
+        query,
+        headers: post_request_signature(client, secret_key, query, false)
+      )
+
+    Logger.info("Order response: #{inspect(response, pretty: true)}")
+
+    response
     |> unwrap_response()
   end
 
