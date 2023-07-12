@@ -1380,21 +1380,25 @@ defmodule Emxc.Global.Futures.V1 do
     positionType = Keyword.get(opts, :positionType, "1")
     reduceOnly = Keyword.get(opts, :reduceOnly, "1")
 
-    query = [
-      symbol: symbol,
-      price: price,
-      vol: vol,
-      leverage: leverage,
-      side: side,
-      type: type,
-      openType: openType,
-      positionId: positionId,
-      externalOid: externalOid,
-      stopLossPrice: stopLossPrice,
-      takeProfitPrice: takeProfitPrice,
-      positionType: positionType,
-      reduceOnly: reduceOnly
-    ]
+    query =
+      [
+        symbol: symbol,
+        price: price,
+        vol: vol,
+        leverage: leverage,
+        side: side,
+        type: type,
+        openType: openType,
+        positionId: positionId,
+        externalOid: externalOid,
+        stopLossPrice: stopLossPrice,
+        takeProfitPrice: takeProfitPrice,
+        positionType: positionType,
+        reduceOnly: reduceOnly
+      ]
+      |> Stream.filter(fn {_, v} -> v != nil end)
+      |> Enum.sort_by(fn {k, _} -> k end)
+      |> Enum.map(fn {k, v} -> {k, to_string(v)} end)
 
     client
     |> Tesla.post(
