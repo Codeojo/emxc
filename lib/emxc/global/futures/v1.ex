@@ -1396,15 +1396,13 @@ defmodule Emxc.Global.Futures.V1 do
         positionType: positionType,
         reduceOnly: reduceOnly
       ]
-      |> Stream.filter(fn {_, v} -> v != nil end)
-      |> Enum.sort_by(fn {k, _} -> k end)
-      |> Enum.map(fn {k, v} -> {k, to_string(v)} end)
+      |> Enum.into(%{})
 
     client
     |> Tesla.post(
       "api/v1/private/order/submit",
-      query |> Enum.into(%{}),
-      headers: post_request_signature(client, secret_key, query)
+      query,
+      headers: post_request_signature(client, secret_key, query, false)
     )
     |> unwrap_response()
   end
