@@ -1366,19 +1366,19 @@ defmodule Emxc.Global.Futures.V1 do
   @spec create_order(client(), String.t(), [create_order_option()]) :: response()
   @doc section: :account_and_trading
   def create_order(client, secret_key, opts \\ []) do
-    symbol = Keyword.get(opts, :symbol, "BTCUSDT")
-    price = Keyword.get(opts, :price, "10000")
-    vol = Keyword.get(opts, :vol, "1")
-    leverage = Keyword.get(opts, :leverage, "1")
-    side = Keyword.get(opts, :side, "1")
-    type = Keyword.get(opts, :type, "1")
-    openType = Keyword.get(opts, :openType, "1")
-    positionId = Keyword.get(opts, :positionId, "1234567890")
-    externalOid = Keyword.get(opts, :externalOid, "1234567890")
-    stopLossPrice = Keyword.get(opts, :stopLossPrice, "10000")
-    takeProfitPrice = Keyword.get(opts, :takeProfitPrice, "10000")
-    positionType = Keyword.get(opts, :positionType, "1")
-    reduceOnly = Keyword.get(opts, :reduceOnly, "1")
+    symbol = Keyword.get(opts, :symbol)
+    price = Keyword.get(opts, :price)
+    vol = Keyword.get(opts, :vol)
+    leverage = Keyword.get(opts, :leverage)
+    side = Keyword.get(opts, :side)
+    type = Keyword.get(opts, :type)
+    openType = Keyword.get(opts, :openType)
+    positionId = Keyword.get(opts, :positionId)
+    externalOid = Keyword.get(opts, :externalOid)
+    stopLossPrice = Keyword.get(opts, :stopLossPrice)
+    takeProfitPrice = Keyword.get(opts, :takeProfitPrice)
+    positionType = Keyword.get(opts, :positionType)
+    reduceOnly = Keyword.get(opts, :reduceOnly)
 
     query =
       [
@@ -1396,6 +1396,7 @@ defmodule Emxc.Global.Futures.V1 do
         positionType: positionType,
         reduceOnly: reduceOnly
       ]
+      |> Stream.filter(fn {_, v} -> v != nil end)
       |> Enum.into(%{})
 
     client
@@ -1836,7 +1837,7 @@ defmodule Emxc.Global.Futures.V1 do
     [{"Request-Time", "#{timestamp}"}, {"Signature", "#{signature}"}]
   end
 
-  @spec post_request_signature(client(), String.t(), keyword(), boolean()) :: headers()
+  @spec post_request_signature(client(), String.t(), keyword() | map(), boolean()) :: headers()
   defp post_request_signature(client, secret_key, payload, convert_to_map? \\ true) do
     api_key = get_api_key(client)
     timestamp = timestamp()
