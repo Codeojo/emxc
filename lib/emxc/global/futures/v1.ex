@@ -1848,7 +1848,7 @@ defmodule Emxc.Global.Futures.V1 do
     signature =
       sign_sha256(
         secret_key,
-        (payload |> Jason.encode!()) <> api_key <> timestamp
+        api_key <> timestamp <> (payload |> Jason.encode!())
       )
 
     [{"Request-Time", "#{timestamp}"}, {"Signature", "#{signature}"}]
